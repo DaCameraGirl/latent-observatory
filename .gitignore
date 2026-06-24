@@ -5,3 +5,7 @@ Thumbs.db
 .vscode/
 .idea/
 dist/
+
+# local scratch / screenshots, not project assets
+image_*.png
+*.tmp

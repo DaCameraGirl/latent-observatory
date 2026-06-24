@@ -71,9 +71,23 @@ textarea {
   width: 100%; margin-top: 6px; resize: vertical; font: inherit;
   line-height: 1.4; min-height: 64px;
 }
-#realPanel button { width: 100%; margin-top: 8px; }
-#realStatus { min-height: 30px; }
+#realPanel button, #uploadPanel button { width: 100%; margin-top: 8px; }
+#realStatus, #uploadStatus { min-height: 28px; }
 input[type="range"] { accent-color: var(--accent2); }
+
+/* --- upload panel -------------------------------------------------------- */
+.filebtn { display: block; margin-top: 6px; }
+.filebtn span {
+  display: block; text-align: center; cursor: pointer; color: #061018; font-weight: 600;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 9px; padding: 9px 10px; font-size: 12.5px;
+}
+.filebtn span:hover { filter: brightness(1.08); }
+#uploadInfo { color: var(--accent); min-height: 14px; word-break: break-all; }
+#panel details { margin-top: 8px; }
+#panel summary { cursor: pointer; list-style: revert; }
+#panel code { background: rgba(120, 160, 255, 0.12); padding: 0 4px; border-radius: 4px; }
+.small { font-size: 10.5px; }
 
 .btnrow { display: flex; gap: 8px; margin-top: 4px; }
 button {

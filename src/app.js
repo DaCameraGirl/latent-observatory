@@ -1,11 +1,13 @@
 /* Latent Space Observatory — application / vtk.js scene
  *
- * Renders the latent field as a glowing point cloud (the hero), with an
+ * Renders an embedding field as a glowing point cloud (the hero), with an
  * optional marching-cubes "nebula" isosurface over a splatted density volume.
- * Coloring is either categorical (by concept) or continuous (distance to a
- * movable query probe), computed in JS and fed as direct uchar scalars.
+ * Coloring is either categorical (supplied with the data) or continuous
+ * (distance to a movable query probe), fed to vtk.js as direct uchar scalars.
  *
- * Everything is client-side. No server, no build step, no local install.
+ * Data always arrives via loadExternal() — from live model embeddings
+ * (src/real.js) or an uploaded file (src/upload.js). Everything is client-side:
+ * no server, no build step, no install.
  */
 (function (OBS) {
   'use strict';
@@ -23,13 +25,9 @@
 
   var R = 10;
   var state = {
-    source: 'real',
-    checkpoint: 1.0,
-    points: 20000,
-    K: 12,
     pointSize: 3,
     opacity: 1.0,
-    colorMode: 'concept',  // 'concept' | 'query'
+    colorMode: 'concept',  // 'concept' (supplied colors) | 'query' (distance)
     colormap: 'viridis',
     query: [0, 0, 0],
     iso: false,
@@ -71,52 +69,27 @@
 
   var field = null;
 
-  // ---- field + geometry ---------------------------------------------------
-  function rebuildField() {
-    field = OBS.latent.generate({
-      concepts: state.K, points: state.points, radius: R,
-      seed: 1337, checkpoint: state.checkpoint
-    });
-
-    var pts = vtk.Common.Core.vtkPoints.newInstance();
-    pts.setData(field.positions, 3);
-    polydata.setPoints(pts);
-
-    var n = field.count;
-    var verts = new Uint32Array(n + 1);
-    verts[0] = n;
-    for (var i = 0; i < n; i++) verts[i + 1] = i;
-    polydata.getVerts().setData(verts);
-
-    updateColors();
-    polydata.modified();
-    if (state.iso) rebuildIso();
-    updateStats();
-  }
-
+  // ---- coloring -----------------------------------------------------------
   function computeColors() {
     if (!field) return new Uint8Array(0);
     var n = field.count, col = new Uint8Array(n * 3), i;
     if (state.colorMode === 'concept') {
-      if (field.colors) { return field.colors; }   // external (real) data carries its own colors
-      var cc = OBS.palette.conceptColors;
-      for (i = 0; i < n; i++) {
-        var c = cc[field.concept[i] % cc.length];
-        col[i * 3] = c[0]; col[i * 3 + 1] = c[1]; col[i * 3 + 2] = c[2];
-      }
-    } else {
-      var q = state.query, p = field.positions, maxd = 0;
-      var d = new Float32Array(n);
-      for (i = 0; i < n; i++) {
-        var dx = p[i * 3] - q[0], dy = p[i * 3 + 1] - q[1], dz = p[i * 3 + 2] - q[2];
-        var dd = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        d[i] = dd; if (dd > maxd) maxd = dd;
-      }
-      var ramp = OBS.palette.maps[state.colormap];
-      for (i = 0; i < n; i++) {
-        var rgb = ramp(1 - d[i] / (maxd || 1)); // near the probe = hot
-        col[i * 3] = rgb[0]; col[i * 3 + 1] = rgb[1]; col[i * 3 + 2] = rgb[2];
-      }
+      if (field.colors) return field.colors;     // supplied categorical/cluster colors
+      for (i = 0; i < n * 3; i++) col[i] = 180;   // neutral fallback (shouldn't happen)
+      return col;
+    }
+    // color by distance to the query probe
+    var q = state.query, p = field.positions, maxd = 0;
+    var d = new Float32Array(n);
+    for (i = 0; i < n; i++) {
+      var dx = p[i * 3] - q[0], dy = p[i * 3 + 1] - q[1], dz = p[i * 3 + 2] - q[2];
+      var dd = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      d[i] = dd; if (dd > maxd) maxd = dd;
+    }
+    var ramp = OBS.palette.maps[state.colormap];
+    for (i = 0; i < n; i++) {
+      var rgb = ramp(1 - d[i] / (maxd || 1)); // near the probe = hot
+      col[i * 3] = rgb[0]; col[i * 3 + 1] = rgb[1]; col[i * 3 + 2] = rgb[2];
     }
     return col;
   }
@@ -211,9 +184,7 @@
 
   function updateStats() {
     if (!field) {
-      set('stat-n', '—');
-      set('stat-k', '—');
-      set('stat-model', 'loading…');
+      set('stat-n', '—'); set('stat-k', '—'); set('stat-model', 'loading…');
       return;
     }
     set('stat-n', field.count.toLocaleString());
@@ -262,19 +233,13 @@
     state.spin = e.target.checked;
     if (state.spin) { lastT = performance.now(); frames = 0; spinLoop(); }
   });
-  bind('reset', 'click', function () {
-    renderer.resetCamera(); render();
-  });
+  bind('reset', 'click', function () { renderer.resetCamera(); render(); });
 
   // About modal
-  bind('aboutBtn', 'click', function () {
-    document.getElementById('about').style.display = 'flex';
-  });
-  bind('aboutClose', 'click', function () {
-    document.getElementById('about').style.display = 'none';
-  });
+  bind('aboutBtn', 'click', function () { document.getElementById('about').style.display = 'flex'; });
+  bind('aboutClose', 'click', function () { document.getElementById('about').style.display = 'none'; });
 
-  // Legend (rebuildable: concept atlas, or discovered clusters for custom data)
+  // Legend (rebuildable: concept atlas, label categories, or discovered clusters)
   function setLegend(names, cols) {
     var box = document.getElementById('legend');
     if (!box) return;
@@ -293,7 +258,7 @@
   }
   setLegend(OBS.palette.conceptNames, OBS.palette.conceptColors);
 
-  // ---- external (real) data path ------------------------------------------
+  // ---- data entry point ---------------------------------------------------
   function applyPositions(positions) {
     var pts = vtk.Common.Core.vtkPoints.newInstance();
     pts.setData(positions, 3);
@@ -315,16 +280,15 @@
     }
     return { min: mn, max: mx };
   }
-  // positions: Float32Array(n*3); colors: Uint8Array(n*3); meta: { K }
+  // positions: Float32Array(n*3); colors: Uint8Array(n*3); meta: { K, model }
   function loadExternal(positions, colors, meta) {
     meta = meta || {};
     var b = boundsOf(positions);
     field = {
       positions: positions, count: positions.length / 3, K: meta.K || 0,
-      colors: colors, min: b.min, max: b.max, concept: null,
+      colors: colors, min: b.min, max: b.max,
       model: meta.model || 'MiniLM-L6-v2'
     };
-    state.source = 'real';
     applyPositions(positions);
     updateColors();
     polydata.modified();
@@ -333,6 +297,7 @@
     renderer.resetCamera();
     render();
   }
+
   // ---- boot ---------------------------------------------------------------
   updateStats();
   renderer.resetCamera();
