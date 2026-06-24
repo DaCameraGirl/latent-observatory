@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="72" height="72" role="img" aria-label="Built by Claude, Opus 4.8">
+  <defs>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4fd6e0"/>
+      <stop offset="100%" stop-color="#b388ff"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#101634"/>
+      <stop offset="100%" stop-color="#070a16"/>
+    </radialGradient>
+  </defs>
+  <circle cx="36" cy="36" r="34" fill="url(#glow)" stroke="url(#ring)" stroke-width="2.5"/>
+  <!-- orbiting field of points = the thing this builder makes -->
+  <g fill="#ffffff" opacity="0.92">
+    <circle cx="24" cy="26" r="2.1"/>
+    <circle cx="48" cy="24" r="1.6"/>
+    <circle cx="50" cy="46" r="2.3"/>
+    <circle cx="22" cy="46" r="1.8"/>
+  </g>
+  <circle cx="36" cy="34" r="7.5" fill="none" stroke="url(#ring)" stroke-width="2"/>
+  <circle cx="36" cy="34" r="2.4" fill="#fff"/>
+  <text x="36" y="62" text-anchor="middle" font-family="Segoe UI, sans-serif"
+        font-size="8.5" fill="#9fb0e6" letter-spacing="0.5">CLAUDE · OPUS 4.8</text>
+</svg>
