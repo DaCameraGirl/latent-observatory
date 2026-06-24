@@ -14,6 +14,9 @@ toolkit ParaView is made of.
 - **A training morph** — drag the checkpoint slider to watch the field evolve from an
   undifferentiated blob into sharpened, well-separated representations.
 - **A "nebula" isosurface** — optional marching-cubes shell over the splatted density field.
+- **Real embeddings** — switch the data source to run a real model (`all-MiniLM-L6-v2`)
+  live in your browser: see how it organizes a curated concept atlas, or paste your own
+  words and watch them auto-cluster by meaning.
 
 ## Why vtk.js (the ParaView connection)
 
@@ -34,8 +37,20 @@ styles/observatory.css deep-space glassmorphism chrome
 src/palette.js        categorical concept colors + viridis/inferno/plasma colormaps
 src/latent.js         deterministic Gaussian-mixture latent field + training-morph model
 src/app.js            vtk.js scene: point cloud, density splat + marching-cubes isosurface,
-                      direct-RGB coloring, query probe, UI wiring, auto-orbit
+                      direct-RGB coloring, query probe, UI wiring, auto-orbit, external-data API
+src/real.js           real embeddings: Transformers.js (all-MiniLM-L6-v2) in-browser,
+                      PCA-to-3D, k-means clustering for custom input
 ```
+
+### Real embeddings
+
+Selecting **Real embeddings (live model)** lazy-loads
+[Transformers.js](https://github.com/xenova/transformers.js) and the
+`Xenova/all-MiniLM-L6-v2` sentence-embedding model (~25 MB, cached after first load),
+computes genuine 384-d vectors entirely client-side, and reduces them to 3D with a
+power-iteration **PCA**. The curated concept atlas keeps the 12-category coloring so you can
+judge how a real model clusters meaning; pasted custom words are colored by **k-means**
+clusters discovered in the projection. No API key, no server.
 
 ### Data model
 
