@@ -49,8 +49,13 @@
 
     <!-- orbit ring + embedding core (favicon DNA) -->
     <g transform="translate(1020 72)">
-      <ellipse cx="0" cy="0" rx="44" ry="18" fill="none" stroke="#7aa0ff" stroke-opacity="0.45" stroke-width="1.5" transform="rotate(-18)"/>
-      <circle cx="0" cy="-4" r="18" fill="url(#core)"/>
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="16s" repeatCount="indefinite"/>
+        <ellipse cx="0" cy="0" rx="44" ry="18" fill="none" stroke="#7aa0ff" stroke-opacity="0.45" stroke-width="1.5" transform="rotate(-18)"/>
+      </g>
+      <circle cx="0" cy="-4" r="18" fill="url(#core)">
+        <animate attributeName="r" values="16;19;16" dur="5s" repeatCount="indefinite"/>
+      </circle>
       <circle cx="-28" cy="-10" r="2.2" fill="#fff" opacity="0.85"/>
       <circle cx="30" cy="12" r="1.8" fill="#4fd6e0" opacity="0.9"/>
       <circle cx="18" cy="-22" r="1.5" fill="#b388ff" opacity="0.8"/>

@@ -5,12 +5,16 @@
 # Latent Space Observatory
 
 <p align="center">
-  <a href="https://dacameragirl.github.io/latent-observatory/"><img src="https://img.shields.io/badge/🌐_Live_App-4fd6e0?style=for-the-badge" alt="Live app"/></a>
-  <a href="https://dacameragirl.github.io/links/"><img src="https://img.shields.io/badge/🔗_Project_Hub-131a26?style=for-the-badge" alt="Project hub"/></a>
-  <img src="https://img.shields.io/badge/vtk.js-36.2-131a26?style=for-the-badge" alt="vtk.js"/>
-  <img src="https://img.shields.io/badge/Transformers.js-2.17-131a26?style=for-the-badge" alt="Transformers.js"/>
-  <img src="https://img.shields.io/badge/all--MiniLM--L6--v2-live-0f131a?style=for-the-badge" alt="all-MiniLM-L6-v2"/>
-  <img src="https://img.shields.io/badge/No_build_step-4fd6e0?style=for-the-badge" alt="No build step"/>
+  <a href="https://dacameragirl.github.io/latent-observatory/"><img src="https://img.shields.io/badge/🌐_Live_App-4fd6e0?style=for-the-badge&labelColor=0f131a" alt="Live app"/></a>
+  <a href="https://dacameragirl.github.io/links/"><img src="https://img.shields.io/badge/🔗_Project_Hub-131a26?style=for-the-badge&labelColor=0f131a" alt="Project hub"/></a>
+  <img src="https://img.shields.io/badge/vtk.js-36.2-131a26?style=for-the-badge&labelColor=0f131a" alt="vtk.js"/>
+  <img src="https://img.shields.io/badge/Transformers.js-2.17-131a26?style=for-the-badge&labelColor=0f131a" alt="Transformers.js"/>
+  <img src="https://img.shields.io/badge/all--MiniLM--L6--v2-live-0f131a?style=for-the-badge&labelColor=05060d" alt="all-MiniLM-L6-v2"/>
+  <img src="https://img.shields.io/badge/No_build_step-4fd6e0?style=for-the-badge&labelColor=0f131a" alt="No build step"/>
+</p>
+
+<p align="center">
+  <img src="docs/assets/embedding-orbit.svg" alt="Animated latent space — concept clusters, query probe, auto-orbit" width="560"/>
 </p>
 
 **Explore real embedding spaces in 3D — upload your own vectors, or embed text live with a model running in your browser.**
@@ -20,7 +24,13 @@ maps — and almost everyone looks at it through flat 2D plots. This tool render
 space as a navigable 3D world, built on the same toolkit ParaView is made of. It launches
 straight into **live** `all-MiniLM-L6-v2` embeddings; there is no synthetic demo.
 
-> **Status:** real-first. No API key, no server, no install. First model load is ~25 MB and caches after that.
+<p align="center">
+  <img src="docs/assets/readme-status.svg" alt="Live MiniLM embeddings in your browser" width="100%"/>
+</p>
+
+<p align="center">
+  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+</p>
 
 ## Repo vs live
 
@@ -29,6 +39,10 @@ straight into **live** `all-MiniLM-L6-v2` embeddings; there is no synthetic demo
 | **Live app** | [dacameragirl.github.io/latent-observatory](https://dacameragirl.github.io/latent-observatory/) |
 | **GitHub repo** | [github.com/DaCameraGirl/latent-observatory](https://github.com/DaCameraGirl/latent-observatory) |
 | **Project hub** | [dacameragirl.github.io/links](https://dacameragirl.github.io/links/) (AI tools) |
+
+<p align="center">
+  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+</p>
 
 ## Three real data paths
 
@@ -65,6 +79,10 @@ detected.
 | **Nebula isosurface** | Optional marching-cubes shell over the splatted density field |
 | **100% client-side** | Static HTML/CSS/JS, vtk.js from a pinned CDN, Transformers.js dynamic import |
 
+<p align="center">
+  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+</p>
+
 ## Why vtk.js (the ParaView connection)
 
 ParaView is built on **VTK** (the Visualization Toolkit, by Kitware). **vtk.js** is Kitware's
@@ -83,9 +101,13 @@ src/real.js            live model embeddings (Transformers.js): atlas + custom w
 src/upload.js          file ingestion controller (file picker + drag-and-drop)
 src/worker.js          CSV/TSV parsing + dimensionality reduction off the UI thread
 src/app.js             vtk.js scene; all data enters via OBS.app.loadExternal(pos, colors, meta)
-docs/assets/           README hero SVG and other repo assets
+docs/assets/           README hero, animated orbit, dark section art
 .github/workflows/     CI (syntax check) + GitHub Pages deploy
 ```
+
+<p align="center">
+  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+</p>
 
 ## Controls
 
@@ -102,6 +124,10 @@ docs/assets/           README hero SVG and other repo assets
 | **Auto-orbit** | Cinematic rotation; shows live FPS |
 
 Mouse: drag to rotate, scroll to zoom, right-drag to pan (vtk.js trackball).
+
+<p align="center">
+  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+</p>
 
 ## Develop locally
 
