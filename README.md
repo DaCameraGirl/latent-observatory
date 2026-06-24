@@ -1,19 +1,46 @@
+<p align="center">
+  <img src="docs/assets/readme-hero.svg" alt="Latent Space Observatory — fly through embedding space in 3D" width="100%"/>
+</p>
+
 # Latent Space Observatory
 
-**Walk through the internal geometry of a neural network's embedding space — as a place you can fly through.**
+<p align="center">
+  <a href="https://dacameragirl.github.io/latent-observatory/"><img src="https://img.shields.io/badge/🌐_Live_Demo-4fd6e0?style=for-the-badge" alt="Live demo"/></a>
+  <a href="https://dacameragirl.github.io/links/"><img src="https://img.shields.io/badge/🔗_Project_Hub-131a26?style=for-the-badge" alt="Project hub"/></a>
+  <img src="https://img.shields.io/badge/vtk.js-36.2-131a26?style=for-the-badge" alt="vtk.js"/>
+  <img src="https://img.shields.io/badge/Transformers.js-2.17-131a26?style=for-the-badge" alt="Transformers.js"/>
+  <img src="https://img.shields.io/badge/all--MiniLM--L6--v2-live-0f131a?style=for-the-badge" alt="all-MiniLM-L6-v2"/>
+  <img src="https://img.shields.io/badge/No_build_step-4fd6e0?style=for-the-badge" alt="No build step"/>
+</p>
 
-🔭 **Live:** https://dacameragirl.github.io/latent-observatory/
+**Walk through the internal geometry of a neural network's embedding space — as a place you can fly through.**
 
 AI research generates enormous high-dimensional data — embeddings, activations, training
 trajectories — and almost everyone looks at it through flat 2D matplotlib plots. This tool
 does the opposite: it renders an embedding space as a navigable 3D world built on the same
 toolkit ParaView is made of.
 
-- **Semantic continents** — concept clusters you can orbit, zoom, and inspect.
-- **A query probe** — sweep a point through the space and watch nearby regions light up by distance.
-- **A training morph** — drag the checkpoint slider to watch the field evolve from an
-  undifferentiated blob into sharpened, well-separated representations.
-- **A "nebula" isosurface** — optional marching-cubes shell over the splatted density field.
+> **Status:** launches straight into **live** `all-MiniLM-L6-v2` embeddings in your browser.
+> No API key, no server, no install. First model load is ~25 MB and caches after that.
+
+## Repo vs live
+
+| What | URL |
+|---|---|
+| **GitHub repo** | [github.com/DaCameraGirl/latent-observatory](https://github.com/DaCameraGirl/latent-observatory) |
+| **Live demo** | [dacameragirl.github.io/latent-observatory](https://dacameragirl.github.io/latent-observatory/) |
+| **Project hub** | [dacameragirl.github.io/links](https://dacameragirl.github.io/links/) (AI tools) |
+
+## Highlights
+
+| Feature | What it does |
+|---|---|
+| **Concept atlas** | 12 curated categories × 12 words each — see how MiniLM actually clusters meaning in 3D |
+| **Your words** | Paste lines, embed live, auto-cluster with k-means in the PCA projection |
+| **Query probe** | Sweep a point through space; color by distance with viridis / inferno / plasma |
+| **Nebula isosurface** | Optional marching-cubes shell over the splatted density field |
+| **Auto-orbit** | Cinematic rotation with live FPS in the HUD |
+| **100% client-side** | Static HTML/CSS/JS, vtk.js from a pinned CDN, Transformers.js dynamic import |
 
 ## Why vtk.js (the ParaView connection)
 
@@ -22,36 +49,36 @@ WebGL port of that same toolkit — it's what ParaView Glance uses to render in 
 So this keeps real ParaView DNA (scientific fields, isosurfaces, scalar coloring) while
 shedding the desktop install entirely.
 
-The whole app is **100% client-side**: static HTML/CSS/JS, vtk.js loaded from a pinned CDN,
-no server, no build step, no local dependencies. That's what makes it deploy cleanly to
-GitHub Pages and run anywhere.
-
 ## Architecture
 
-```
+```text
 index.html            UI shell + control panel; loads vtk.js (pinned) then the app
 styles/observatory.css deep-space glassmorphism chrome
 src/palette.js        categorical concept colors + viridis/inferno/plasma colormaps
-src/latent.js         deterministic Gaussian-mixture latent field + training-morph model
-src/app.js            vtk.js scene: point cloud, density splat + marching-cubes isosurface,
+src/latent.js         density-field helper (legacy synthetic generator; scene is real-first)
+src/real.js           Transformers.js embeddings, PCA-to-3D, atlas + custom-word paths
+src/app.js            vtk.js scene: point cloud, density splat, marching-cubes isosurface,
                       direct-RGB coloring, query probe, UI wiring, auto-orbit
+docs/assets/          README hero SVG and other repo assets
+.github/workflows/    GitHub Pages deploy
 ```
 
-### Data model
+### Real embeddings
 
-The latent field is a seeded Gaussian mixture of `K` concept clusters. A `checkpoint`
-parameter in `[0, 1]` interpolates cluster centers from a collapsed origin blob to a
-converged spherical arrangement and shrinks intra-cluster spread — a faithful, reproducible
-analogue of representations separating during training. Swapping in **real** embeddings is a
-drop-in: reduce them to 3D (PCA/UMAP) and hand `app.js` a `Float32Array` of positions plus a
-concept index. That producer-side pipeline is the natural next module.
+On launch, the app lazy-loads
+[Transformers.js](https://github.com/xenova/transformers.js) and the
+`Xenova/all-MiniLM-L6-v2` sentence-embedding model (~25 MB, cached after first load),
+computes genuine 384-d vectors entirely client-side, and reduces them to 3D with a
+power-iteration **PCA**. The curated concept atlas keeps the 12-category coloring so you can
+judge how a real model clusters meaning; pasted custom words are colored by **k-means**
+clusters discovered in the projection.
 
 ## Controls
 
 | Control | What it does |
 |---|---|
-| **Checkpoint** | Morphs the field from start-of-training to converged |
-| **Embeddings** | Point budget (8k / 20k / 40k) |
+| **Reload concept atlas** | Re-embed the curated 12×12 vocabulary |
+| **Your words → Embed** | Paste lines (one per line) and cluster in 3D |
 | **Coloring → concept** | Categorical atlas coloring |
 | **Coloring → query distance** | Color by distance to a movable probe; pick a colormap |
 | **Probe X/Y/Z** | Move the query point through the space |
@@ -61,14 +88,24 @@ concept index. That producer-side pipeline is the natural next module.
 
 Mouse: drag to rotate, scroll to zoom, right-drag to pan (vtk.js trackball).
 
-## Develop locally (optional)
+## Develop locally
 
 No build required. Any static server works:
 
 ```bash
+npm start
+# or
 npx serve .
 # or
 python -m http.server
+```
+
+Open http://localhost:3000 (or whatever port your server prints).
+
+Syntax check (no browser needed):
+
+```bash
+npm run check
 ```
 
 ## Roadmap
@@ -78,10 +115,10 @@ python -m http.server
 - glTF export of a captured scene as a shareable digital asset.
 - Attention-as-flow and loss-landscape scenes (sibling visualizations).
 
-## Authorship
+## Contributors
 
-Built by **Claude (Opus 4.8)** at Angela Hudson's ([DaCameraGirl](https://github.com/DaCameraGirl))
-invitation. Angela sets the direction and approves; the implementation is mine.
+- **Angela Hudson** ([DaCameraGirl](https://github.com/DaCameraGirl)) — product direction, testing, hub placement
+- **Claude** — core app, vtk.js scene, real-embeddings mode, GitHub workflow
 
 ## License
 
