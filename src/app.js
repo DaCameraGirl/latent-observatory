@@ -23,7 +23,7 @@
 
   var R = 10;
   var state = {
-    source: 'demo',        // 'demo' | 'real'
+    source: 'real',
     checkpoint: 1.0,
     points: 20000,
     K: 12,
@@ -95,6 +95,7 @@
   }
 
   function computeColors() {
+    if (!field) return new Uint8Array(0);
     var n = field.count, col = new Uint8Array(n * 3), i;
     if (state.colorMode === 'concept') {
       if (field.colors) { return field.colors; }   // external (real) data carries its own colors
@@ -121,6 +122,7 @@
   }
 
   function updateColors() {
+    if (!field) return;
     var arr = vtk.Common.Core.vtkDataArray.newInstance({
       name: 'Colors', numberOfComponents: 3, values: computeColors()
     });
@@ -130,6 +132,7 @@
 
   // Splat points onto a coarse grid, then marching-cubes an isosurface.
   function rebuildIso() {
+    if (!field) return;
     try {
       var dims = 40;
       var mn = field.min, mx = field.max;
@@ -207,9 +210,15 @@
   }
 
   function updateStats() {
+    if (!field) {
+      set('stat-n', '—');
+      set('stat-k', '—');
+      set('stat-model', 'loading…');
+      return;
+    }
     set('stat-n', field.count.toLocaleString());
     set('stat-k', field.K);
-    set('stat-cp', state.source === 'real' ? 'real' : Math.round(state.checkpoint * 100) + '%');
+    set('stat-model', field.model || 'MiniLM-L6-v2');
   }
   function set(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
 
@@ -220,16 +229,6 @@
     return el;
   }
 
-  bind('cp', 'input', function (e) {
-    state.checkpoint = (+e.target.value) / 100;
-    if (state.source === 'real') return;
-    rebuildField(); render();
-  });
-  bind('npts', 'change', function (e) {
-    state.points = +e.target.value;
-    if (state.source === 'real') return;
-    rebuildField(); renderer.resetCamera(); render();
-  });
   bind('psize', 'input', function (e) {
     state.pointSize = +e.target.value;
     actor.getProperty().setPointSize(state.pointSize); render();
@@ -322,7 +321,8 @@
     var b = boundsOf(positions);
     field = {
       positions: positions, count: positions.length / 3, K: meta.K || 0,
-      colors: colors, min: b.min, max: b.max, concept: null
+      colors: colors, min: b.min, max: b.max, concept: null,
+      model: meta.model || 'MiniLM-L6-v2'
     };
     state.source = 'real';
     applyPositions(positions);
@@ -333,21 +333,13 @@
     renderer.resetCamera();
     render();
   }
-  function rebuildDemo() {
-    state.source = 'demo';
-    rebuildField();
-    setLegend(OBS.palette.conceptNames, OBS.palette.conceptColors);
-    renderer.resetCamera();
-    render();
-  }
-
   // ---- boot ---------------------------------------------------------------
-  rebuildField();
+  updateStats();
   renderer.resetCamera();
   render();
 
   window.OBS.app = {
     state: state, render: render,
-    loadExternal: loadExternal, rebuildDemo: rebuildDemo, setLegend: setLegend
+    loadExternal: loadExternal, setLegend: setLegend
   };
 })(window.OBS);
