@@ -23,6 +23,7 @@
 
   var R = 10;
   var state = {
+    source: 'demo',        // 'demo' | 'real'
     checkpoint: 1.0,
     points: 20000,
     K: 12,
@@ -96,6 +97,7 @@
   function computeColors() {
     var n = field.count, col = new Uint8Array(n * 3), i;
     if (state.colorMode === 'concept') {
+      if (field.colors) { return field.colors; }   // external (real) data carries its own colors
       var cc = OBS.palette.conceptColors;
       for (i = 0; i < n; i++) {
         var c = cc[field.concept[i] % cc.length];
@@ -207,7 +209,7 @@
   function updateStats() {
     set('stat-n', field.count.toLocaleString());
     set('stat-k', field.K);
-    set('stat-cp', Math.round(state.checkpoint * 100) + '%');
+    set('stat-cp', state.source === 'real' ? 'real' : Math.round(state.checkpoint * 100) + '%');
   }
   function set(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
 
@@ -220,10 +222,12 @@
 
   bind('cp', 'input', function (e) {
     state.checkpoint = (+e.target.value) / 100;
+    if (state.source === 'real') return;
     rebuildField(); render();
   });
   bind('npts', 'change', function (e) {
     state.points = +e.target.value;
+    if (state.source === 'real') return;
     rebuildField(); renderer.resetCamera(); render();
   });
   bind('psize', 'input', function (e) {
@@ -271,11 +275,11 @@
     document.getElementById('about').style.display = 'none';
   });
 
-  // Legend
-  (function buildLegend() {
+  // Legend (rebuildable: concept atlas, or discovered clusters for custom data)
+  function setLegend(names, cols) {
     var box = document.getElementById('legend');
     if (!box) return;
-    var names = OBS.palette.conceptNames, cols = OBS.palette.conceptColors;
+    box.innerHTML = '';
     for (var i = 0; i < names.length; i++) {
       var row = document.createElement('div');
       row.className = 'legend-item';
@@ -287,12 +291,63 @@
       row.appendChild(sw); row.appendChild(label);
       box.appendChild(row);
     }
-  })();
+  }
+  setLegend(OBS.palette.conceptNames, OBS.palette.conceptColors);
+
+  // ---- external (real) data path ------------------------------------------
+  function applyPositions(positions) {
+    var pts = vtk.Common.Core.vtkPoints.newInstance();
+    pts.setData(positions, 3);
+    polydata.setPoints(pts);
+    var n = positions.length / 3;
+    var verts = new Uint32Array(n + 1);
+    verts[0] = n;
+    for (var i = 0; i < n; i++) verts[i + 1] = i;
+    polydata.getVerts().setData(verts);
+  }
+  function boundsOf(positions) {
+    var mn = [1e9, 1e9, 1e9], mx = [-1e9, -1e9, -1e9];
+    for (var i = 0; i < positions.length; i += 3) {
+      for (var a = 0; a < 3; a++) {
+        var v = positions[i + a];
+        if (v < mn[a]) mn[a] = v;
+        if (v > mx[a]) mx[a] = v;
+      }
+    }
+    return { min: mn, max: mx };
+  }
+  // positions: Float32Array(n*3); colors: Uint8Array(n*3); meta: { K }
+  function loadExternal(positions, colors, meta) {
+    meta = meta || {};
+    var b = boundsOf(positions);
+    field = {
+      positions: positions, count: positions.length / 3, K: meta.K || 0,
+      colors: colors, min: b.min, max: b.max, concept: null
+    };
+    state.source = 'real';
+    applyPositions(positions);
+    updateColors();
+    polydata.modified();
+    if (state.iso) rebuildIso();
+    updateStats();
+    renderer.resetCamera();
+    render();
+  }
+  function rebuildDemo() {
+    state.source = 'demo';
+    rebuildField();
+    setLegend(OBS.palette.conceptNames, OBS.palette.conceptColors);
+    renderer.resetCamera();
+    render();
+  }
 
   // ---- boot ---------------------------------------------------------------
   rebuildField();
   renderer.resetCamera();
   render();
 
-  window.OBS.app = { state: state, render: render };
+  window.OBS.app = {
+    state: state, render: render,
+    loadExternal: loadExternal, rebuildDemo: rebuildDemo, setLegend: setLegend
+  };
 })(window.OBS);
