@@ -1,0 +1,14 @@
+{
+  "name": "latent-observatory",
+  "version": "1.0.0",
+  "description": "Walk through the internal geometry of a neural network's embedding space — a ParaView/vtk.js observatory for AI research.",
+  "homepage": "https://dacameragirl.github.io/latent-observatory/",
+  "author": "Angela Hudson (DaCameraGirl)",
+  "license": "SEE LICENSE IN LICENSE",
+  "private": true,
+  "scripts": {
+    "start": "npx serve .",
+    "check": "node --check src/palette.js && node --check src/latent.js && node --check src/app.js"
+  },
+  "keywords": ["vtk.js", "paraview", "embeddings", "latent-space", "visualization", "webgl", "ai"]
+}
