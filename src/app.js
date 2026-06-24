@@ -1,0 +1,298 @@
+/* Latent Space Observatory — application / vtk.js scene
+ *
+ * Renders the latent field as a glowing point cloud (the hero), with an
+ * optional marching-cubes "nebula" isosurface over a splatted density volume.
+ * Coloring is either categorical (by concept) or continuous (distance to a
+ * movable query probe), computed in JS and fed as direct uchar scalars.
+ *
+ * Everything is client-side. No server, no build step, no local install.
+ */
+(function (OBS) {
+  'use strict';
+
+  var vtk = window.vtk;
+  var errBox = document.getElementById('error');
+  function fail(msg) {
+    if (errBox) { errBox.textContent = msg; errBox.style.display = 'block'; }
+    console.error(msg);
+  }
+  if (!vtk) {
+    fail('vtk.js failed to load from the CDN. Check your connection and hard-refresh (Ctrl+Shift+R).');
+    return;
+  }
+
+  var R = 10;
+  var state = {
+    checkpoint: 1.0,
+    points: 20000,
+    K: 12,
+    pointSize: 3,
+    opacity: 1.0,
+    colorMode: 'concept',  // 'concept' | 'query'
+    colormap: 'viridis',
+    query: [0, 0, 0],
+    iso: false,
+    isoLevel: 0.18,
+    spin: false
+  };
+
+  // ---- renderer -----------------------------------------------------------
+  var container = document.getElementById('view');
+  var fsrw = vtk.Rendering.Misc.vtkFullScreenRenderWindow.newInstance({
+    rootContainer: container,
+    containerStyle: { position: 'absolute', width: '100%', height: '100%' },
+    background: [0.02, 0.02, 0.06]
+  });
+  var renderer = fsrw.getRenderer();
+  var renderWindow = fsrw.getRenderWindow();
+
+  // ---- point-cloud actor --------------------------------------------------
+  var polydata = vtk.Common.DataModel.vtkPolyData.newInstance();
+  var mapper = vtk.Rendering.Core.vtkMapper.newInstance();
+  mapper.setInputData(polydata);
+  mapper.setScalarVisibility(true);
+  try { if (mapper.setColorModeToDirectScalars) mapper.setColorModeToDirectScalars(); } catch (e) {}
+  var actor = vtk.Rendering.Core.vtkActor.newInstance();
+  actor.setMapper(mapper);
+  actor.getProperty().setPointSize(state.pointSize);
+  actor.getProperty().setOpacity(state.opacity);
+  try { actor.getProperty().setLighting(false); } catch (e) {}
+  renderer.addActor(actor);
+
+  // ---- isosurface ("nebula") actor ---------------------------------------
+  var isoMapper = vtk.Rendering.Core.vtkMapper.newInstance();
+  isoMapper.setScalarVisibility(false);
+  var isoActor = vtk.Rendering.Core.vtkActor.newInstance();
+  isoActor.setMapper(isoMapper);
+  isoActor.getProperty().setColor(0.25, 0.9, 0.95);
+  isoActor.getProperty().setOpacity(0.10);
+  var isoInScene = false;
+
+  var field = null;
+
+  // ---- field + geometry ---------------------------------------------------
+  function rebuildField() {
+    field = OBS.latent.generate({
+      concepts: state.K, points: state.points, radius: R,
+      seed: 1337, checkpoint: state.checkpoint
+    });
+
+    var pts = vtk.Common.Core.vtkPoints.newInstance();
+    pts.setData(field.positions, 3);
+    polydata.setPoints(pts);
+
+    var n = field.count;
+    var verts = new Uint32Array(n + 1);
+    verts[0] = n;
+    for (var i = 0; i < n; i++) verts[i + 1] = i;
+    polydata.getVerts().setData(verts);
+
+    updateColors();
+    polydata.modified();
+    if (state.iso) rebuildIso();
+    updateStats();
+  }
+
+  function computeColors() {
+    var n = field.count, col = new Uint8Array(n * 3), i;
+    if (state.colorMode === 'concept') {
+      var cc = OBS.palette.conceptColors;
+      for (i = 0; i < n; i++) {
+        var c = cc[field.concept[i] % cc.length];
+        col[i * 3] = c[0]; col[i * 3 + 1] = c[1]; col[i * 3 + 2] = c[2];
+      }
+    } else {
+      var q = state.query, p = field.positions, maxd = 0;
+      var d = new Float32Array(n);
+      for (i = 0; i < n; i++) {
+        var dx = p[i * 3] - q[0], dy = p[i * 3 + 1] - q[1], dz = p[i * 3 + 2] - q[2];
+        var dd = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        d[i] = dd; if (dd > maxd) maxd = dd;
+      }
+      var ramp = OBS.palette.maps[state.colormap];
+      for (i = 0; i < n; i++) {
+        var rgb = ramp(1 - d[i] / (maxd || 1)); // near the probe = hot
+        col[i * 3] = rgb[0]; col[i * 3 + 1] = rgb[1]; col[i * 3 + 2] = rgb[2];
+      }
+    }
+    return col;
+  }
+
+  function updateColors() {
+    var arr = vtk.Common.Core.vtkDataArray.newInstance({
+      name: 'Colors', numberOfComponents: 3, values: computeColors()
+    });
+    polydata.getPointData().setScalars(arr);
+    polydata.modified();
+  }
+
+  // Splat points onto a coarse grid, then marching-cubes an isosurface.
+  function rebuildIso() {
+    try {
+      var dims = 40;
+      var mn = field.min, mx = field.max;
+      var sx = (mx[0] - mn[0]) / (dims - 1) || 1;
+      var sy = (mx[1] - mn[1]) / (dims - 1) || 1;
+      var sz = (mx[2] - mn[2]) / (dims - 1) || 1;
+
+      var img = vtk.Common.DataModel.vtkImageData.newInstance();
+      img.setDimensions(dims, dims, dims);
+      img.setSpacing(sx, sy, sz);
+      img.setOrigin(mn[0], mn[1], mn[2]);
+
+      var vals = new Float32Array(dims * dims * dims);
+      var p = field.positions, n = field.count, rad = 2;
+      for (var i = 0; i < n; i++) {
+        var ix = Math.round((p[i * 3] - mn[0]) / sx);
+        var iy = Math.round((p[i * 3 + 1] - mn[1]) / sy);
+        var iz = Math.round((p[i * 3 + 2] - mn[2]) / sz);
+        for (var a = -rad; a <= rad; a++)
+          for (var b = -rad; b <= rad; b++)
+            for (var cc = -rad; cc <= rad; cc++) {
+              var x = ix + a, y = iy + b, z = iz + cc;
+              if (x < 0 || y < 0 || z < 0 || x >= dims || y >= dims || z >= dims) continue;
+              vals[x + dims * (y + dims * z)] += Math.exp(-(a * a + b * b + cc * cc) / 2.0);
+            }
+      }
+      var maxv = 0;
+      for (i = 0; i < vals.length; i++) if (vals[i] > maxv) maxv = vals[i];
+      if (maxv > 0) for (i = 0; i < vals.length; i++) vals[i] /= maxv;
+
+      var sc = vtk.Common.Core.vtkDataArray.newInstance({
+        name: 'density', numberOfComponents: 1, values: vals
+      });
+      img.getPointData().setScalars(sc);
+
+      var mc = vtk.Filters.General.vtkImageMarchingCubes.newInstance({
+        contourValue: state.isoLevel
+      });
+      mc.setInputData(img);
+      isoMapper.setInputData(mc.getOutputData());
+    } catch (e) {
+      console.warn('isosurface build failed', e);
+    }
+  }
+
+  function setIso(on) {
+    state.iso = on;
+    if (on) {
+      rebuildIso();
+      if (!isoInScene) { renderer.addActor(isoActor); isoInScene = true; }
+    } else if (isoInScene) {
+      renderer.removeActor(isoActor); isoInScene = false;
+    }
+    render();
+  }
+
+  // ---- render / camera ----------------------------------------------------
+  function render() { renderWindow.render(); }
+
+  var fps = 0, frames = 0, lastT = performance.now();
+  function spinLoop() {
+    if (!state.spin) return;
+    renderer.getActiveCamera().azimuth(0.3);
+    renderer.resetCameraClippingRange();
+    render();
+    frames++;
+    var now = performance.now();
+    if (now - lastT >= 500) {
+      fps = Math.round((frames * 1000) / (now - lastT));
+      frames = 0; lastT = now;
+      var el = document.getElementById('stat-fps');
+      if (el) el.textContent = fps;
+    }
+    requestAnimationFrame(spinLoop);
+  }
+
+  function updateStats() {
+    set('stat-n', field.count.toLocaleString());
+    set('stat-k', field.K);
+    set('stat-cp', Math.round(state.checkpoint * 100) + '%');
+  }
+  function set(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
+
+  // ---- UI wiring ----------------------------------------------------------
+  function bind(id, evt, fn) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener(evt, fn);
+    return el;
+  }
+
+  bind('cp', 'input', function (e) {
+    state.checkpoint = (+e.target.value) / 100;
+    rebuildField(); render();
+  });
+  bind('npts', 'change', function (e) {
+    state.points = +e.target.value;
+    rebuildField(); renderer.resetCamera(); render();
+  });
+  bind('psize', 'input', function (e) {
+    state.pointSize = +e.target.value;
+    actor.getProperty().setPointSize(state.pointSize); render();
+  });
+  bind('opacity', 'input', function (e) {
+    state.opacity = (+e.target.value) / 100;
+    actor.getProperty().setOpacity(state.opacity); render();
+  });
+  bind('colorMode', 'change', function (e) {
+    state.colorMode = e.target.value;
+    document.getElementById('queryGroup').style.display =
+      state.colorMode === 'query' ? 'block' : 'none';
+    updateColors(); render();
+  });
+  bind('colormap', 'change', function (e) {
+    state.colormap = e.target.value;
+    if (state.colorMode === 'query') { updateColors(); render(); }
+  });
+  ['qx', 'qy', 'qz'].forEach(function (id, axis) {
+    bind(id, 'input', function (e) {
+      state.query[axis] = +e.target.value;
+      if (state.colorMode === 'query') { updateColors(); render(); }
+    });
+  });
+  bind('iso', 'change', function (e) { setIso(e.target.checked); });
+  bind('isoLevel', 'input', function (e) {
+    state.isoLevel = (+e.target.value) / 100;
+    if (state.iso) { rebuildIso(); render(); }
+  });
+  bind('spin', 'change', function (e) {
+    state.spin = e.target.checked;
+    if (state.spin) { lastT = performance.now(); frames = 0; spinLoop(); }
+  });
+  bind('reset', 'click', function () {
+    renderer.resetCamera(); render();
+  });
+
+  // About modal
+  bind('aboutBtn', 'click', function () {
+    document.getElementById('about').style.display = 'flex';
+  });
+  bind('aboutClose', 'click', function () {
+    document.getElementById('about').style.display = 'none';
+  });
+
+  // Legend
+  (function buildLegend() {
+    var box = document.getElementById('legend');
+    if (!box) return;
+    var names = OBS.palette.conceptNames, cols = OBS.palette.conceptColors;
+    for (var i = 0; i < names.length; i++) {
+      var row = document.createElement('div');
+      row.className = 'legend-item';
+      var sw = document.createElement('span');
+      sw.className = 'swatch';
+      sw.style.background = 'rgb(' + cols[i].join(',') + ')';
+      var label = document.createElement('span');
+      label.textContent = names[i];
+      row.appendChild(sw); row.appendChild(label);
+      box.appendChild(row);
+    }
+  })();
+
+  // ---- boot ---------------------------------------------------------------
+  rebuildField();
+  renderer.resetCamera();
+  render();
+
+  window.OBS.app = { state: state, render: render };
+})(window.OBS);
