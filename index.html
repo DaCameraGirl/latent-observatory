@@ -26,6 +26,16 @@
   <!-- Control panel -->
   <aside id="panel">
     <section>
+      <h2>Data source</h2>
+      <label>
+        <select id="source">
+          <option value="demo" selected>Demo field (synthetic)</option>
+          <option value="real">Real embeddings (live model)</option>
+        </select>
+      </label>
+    </section>
+
+    <section id="trainingPanel">
       <h2>Training</h2>
       <label>Checkpoint <span class="hint">(step 0 &rarr; converged)</span>
         <input id="cp" type="range" min="0" max="100" value="100" />
@@ -37,6 +47,16 @@
           <option value="40000">40,000 points</option>
         </select>
       </label>
+    </section>
+
+    <section id="realPanel" style="display:none">
+      <h2>Real embeddings</h2>
+      <p id="realStatus" class="hint">A real model runs in your browser &mdash; no server.</p>
+      <button id="embedAtlas">Reload concept atlas</button>
+      <label>Your own words <span class="hint">(one per line)</span>
+        <textarea id="realText" rows="5" placeholder="moon&#10;rocket&#10;comet&#10;galaxy&#10;telescope&#10;asteroid"></textarea>
+      </label>
+      <button id="embedCustom" class="ghost">Embed my words</button>
     </section>
 
     <section>
@@ -119,5 +139,6 @@
   <script src="src/palette.js"></script>
   <script src="src/latent.js"></script>
   <script src="src/app.js"></script>
+  <script src="src/real.js"></script>
 </body>
 </html>

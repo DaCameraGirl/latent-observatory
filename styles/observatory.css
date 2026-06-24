@@ -63,10 +63,16 @@ html, body {
 
 select, input[type="range"] { width: 100%; margin-top: 6px; }
 input[type="checkbox"] { width: auto; margin: 0; accent-color: var(--accent); }
-select {
+select, textarea {
   background: rgba(10, 14, 28, 0.9); color: var(--text);
   border: 1px solid var(--stroke); border-radius: 8px; padding: 7px 8px;
 }
+textarea {
+  width: 100%; margin-top: 6px; resize: vertical; font: inherit;
+  line-height: 1.4; min-height: 64px;
+}
+#realPanel button { width: 100%; margin-top: 8px; }
+#realStatus { min-height: 30px; }
 input[type="range"] { accent-color: var(--accent2); }
 
 .btnrow { display: flex; gap: 8px; margin-top: 4px; }
