@@ -25,35 +25,11 @@
 
   <!-- Control panel -->
   <aside id="panel">
-    <section>
-      <h2>Data source</h2>
-      <label>
-        <select id="source">
-          <option value="demo" selected>Demo field (synthetic)</option>
-          <option value="real">Real embeddings (live model)</option>
-        </select>
-      </label>
-    </section>
-
-    <section id="trainingPanel">
-      <h2>Training</h2>
-      <label>Checkpoint <span class="hint">(step 0 &rarr; converged)</span>
-        <input id="cp" type="range" min="0" max="100" value="100" />
-      </label>
-      <label>Embeddings
-        <select id="npts">
-          <option value="8000">8,000 points</option>
-          <option value="20000" selected>20,000 points</option>
-          <option value="40000">40,000 points</option>
-        </select>
-      </label>
-    </section>
-
-    <section id="realPanel" style="display:none">
-      <h2>Real embeddings</h2>
-      <p id="realStatus" class="hint">A real model runs in your browser &mdash; no server.</p>
+    <section id="realPanel">
+      <h2>Embeddings</h2>
+      <p id="realStatus" class="hint">Loading all-MiniLM-L6-v2 in your browser&hellip;</p>
       <button id="embedAtlas">Reload concept atlas</button>
-      <label>Your own words <span class="hint">(one per line)</span>
+      <label>Your words <span class="hint">(one per line)</span>
         <textarea id="realText" rows="5" placeholder="moon&#10;rocket&#10;comet&#10;galaxy&#10;telescope&#10;asteroid"></textarea>
       </label>
       <button id="embedCustom" class="ghost">Embed my words</button>
@@ -105,7 +81,7 @@
     <div id="stats">
       <span><strong id="stat-n">0</strong> points</span>
       <span><strong id="stat-k">0</strong> concepts</span>
-      <span>step <strong id="stat-cp">100%</strong></span>
+      <span><strong id="stat-model">loading</strong></span>
       <span><strong id="stat-fps">0</strong> fps</span>
     </div>
   </footer>
@@ -127,10 +103,9 @@
         you can orbit, a probe you can sweep to light up neighborhoods, and a checkpoint
         slider that morphs the field from an undifferentiated blob into sharpened,
         well-separated representations.</p>
-      <p class="muted small">Rendered with <strong>vtk.js</strong> &mdash; Kitware's WebGL port of the
-        VTK toolkit that ParaView itself is built on. 100% client-side: no server,
-        no install. Built by Claude (Opus 4.8) at Angela Hudson's invitation; she
-        approves the direction, the build is mine.</p>
+      <p class="muted small">Rendered with <strong>vtk.js</strong> and live
+        <strong>all-MiniLM-L6-v2</strong> embeddings via Transformers.js. 100% client-side:
+        no server, no API key, no install.</p>
     </div>
   </div>
 

@@ -176,8 +176,8 @@
         colors[i * 3] = col[0]; colors[i * 3 + 1] = col[1]; colors[i * 3 + 2] = col[2];
       }
       OBS.app.setLegend(names, OBS.palette.conceptColors);
-      OBS.app.loadExternal(coords, colors, { K: names.length });
-      setStatus(emb.N + ' real embeddings · ' + names.length + ' concepts · all-MiniLM-L6-v2');
+      OBS.app.loadExternal(coords, colors, { K: names.length, model: 'MiniLM-L6-v2' });
+      setStatus(emb.N + ' embeddings · ' + names.length + ' concepts · all-MiniLM-L6-v2');
     }).catch(function (e) { setStatus('Error: ' + (e && e.message ? e.message : e)); console.error(e); });
   }
 
@@ -200,28 +200,17 @@
       var lnames = [], lcols = [];
       for (var g = 0; g < km.k; g++) { lnames.push('Cluster ' + (g + 1)); lcols.push(pal[g % pal.length]); }
       OBS.app.setLegend(lnames, lcols);
-      OBS.app.loadExternal(coords, colors, { K: km.k });
+      OBS.app.loadExternal(coords, colors, { K: km.k, model: 'MiniLM-L6-v2' });
       setStatus(emb.N + ' of your words · ' + km.k + ' clusters · all-MiniLM-L6-v2');
     }).catch(function (e) { setStatus('Error: ' + (e && e.message ? e.message : e)); console.error(e); });
   }
 
   // ---- wiring -------------------------------------------------------------
-  function show(id, on) { var e = document.getElementById(id); if (e) e.style.display = on ? '' : 'none'; }
-
   function init() {
-    var sel = document.getElementById('source');
-    if (sel) sel.addEventListener('change', function (e) {
-      if (e.target.value === 'real') {
-        show('trainingPanel', false); show('realPanel', true);
-        setStatus('Loading the live model… first run downloads ~25 MB.');
-        loadAtlas();
-      } else {
-        show('realPanel', false); show('trainingPanel', true);
-        OBS.app.rebuildDemo();
-      }
-    });
     var a = document.getElementById('embedAtlas'); if (a) a.addEventListener('click', loadAtlas);
     var c = document.getElementById('embedCustom'); if (c) c.addEventListener('click', loadCustom);
+    setStatus('Loading all-MiniLM-L6-v2… first run downloads ~25 MB.');
+    loadAtlas();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
