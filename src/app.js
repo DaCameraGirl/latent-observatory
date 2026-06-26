@@ -5,9 +5,9 @@
  * Coloring is either categorical (supplied with the data) or continuous
  * (distance to a movable query probe), fed to vtk.js as direct uchar scalars.
  *
- * Data always arrives via loadExternal() — from live model embeddings
- * (src/real.js) or an uploaded file (src/upload.js). Everything is client-side:
- * no server, no build step, no install.
+ * Launches instantly with a synthetic demo field (20k points, auto-orbit).
+ * Real embeddings and uploaded files arrive via loadExternal().
+ * Everything is client-side: no server, no build step, no install.
  */
 (function (OBS) {
   'use strict';
@@ -22,9 +22,17 @@
     fail('vtk.js failed to load from the CDN. Check your connection and hard-refresh (Ctrl+Shift+R).');
     return;
   }
+  if (!OBS.latent) {
+    fail('Demo field generator failed to load. Hard-refresh (Ctrl+Shift+R).');
+    return;
+  }
 
   var R = 10;
   var state = {
+    source: 'demo',        // 'demo' | 'real' | 'upload'
+    checkpoint: 1.0,
+    points: 20000,
+    K: 12,
     pointSize: 3,
     opacity: 1.0,
     colorMode: 'concept',  // 'concept' (supplied colors) | 'query' (distance)
@@ -32,7 +40,7 @@
     query: [0, 0, 0],
     iso: false,
     isoLevel: 0.18,
-    spin: false
+    spin: true
   };
 
   // ---- renderer -----------------------------------------------------------
@@ -69,16 +77,46 @@
 
   var field = null;
 
+  // ---- synthetic demo field -----------------------------------------------
+  function rebuildField() {
+    field = OBS.latent.generate({
+      concepts: state.K, points: state.points, radius: R,
+      seed: 1337, checkpoint: state.checkpoint
+    });
+
+    var pts = vtk.Common.Core.vtkPoints.newInstance();
+    pts.setData(field.positions, 3);
+    polydata.setPoints(pts);
+
+    var n = field.count;
+    var verts = new Uint32Array(n + 1);
+    verts[0] = n;
+    for (var i = 0; i < n; i++) verts[i + 1] = i;
+    polydata.getVerts().setData(verts);
+
+    updateColors();
+    polydata.modified();
+    if (state.iso) rebuildIso();
+    updateStats();
+  }
+
   // ---- coloring -----------------------------------------------------------
   function computeColors() {
     if (!field) return new Uint8Array(0);
     var n = field.count, col = new Uint8Array(n * 3), i;
     if (state.colorMode === 'concept') {
-      if (field.colors) return field.colors;     // supplied categorical/cluster colors
-      for (i = 0; i < n * 3; i++) col[i] = 180;   // neutral fallback (shouldn't happen)
+      if (field.colors) return field.colors;
+      if (field.concept) {
+        var cc = OBS.palette.conceptColors;
+        for (i = 0; i < n; i++) {
+          var c = cc[field.concept[i] % cc.length];
+          col[i * 3] = c[0]; col[i * 3 + 1] = c[1]; col[i * 3 + 2] = c[2];
+        }
+        return col;
+      }
+      for (i = 0; i < n * 3; i++) col[i] = 180;
       return col;
     }
-    // color by distance to the query probe
     var q = state.query, p = field.positions, maxd = 0;
     var d = new Float32Array(n);
     for (i = 0; i < n; i++) {
@@ -88,7 +126,7 @@
     }
     var ramp = OBS.palette.maps[state.colormap];
     for (i = 0; i < n; i++) {
-      var rgb = ramp(1 - d[i] / (maxd || 1)); // near the probe = hot
+      var rgb = ramp(1 - d[i] / (maxd || 1));
       col[i * 3] = rgb[0]; col[i * 3 + 1] = rgb[1]; col[i * 3 + 2] = rgb[2];
     }
     return col;
@@ -103,7 +141,6 @@
     polydata.modified();
   }
 
-  // Splat points onto a coarse grid, then marching-cubes an isosurface.
   function rebuildIso() {
     if (!field) return;
     try {
@@ -184,14 +221,27 @@
 
   function updateStats() {
     if (!field) {
-      set('stat-n', '—'); set('stat-k', '—'); set('stat-model', 'loading…');
+      set('stat-n', '—'); set('stat-k', '—'); set('stat-extra', 'loading…');
       return;
     }
     set('stat-n', field.count.toLocaleString());
     set('stat-k', field.K);
-    set('stat-model', field.model || 'MiniLM-L6-v2');
+    if (state.source === 'demo') {
+      set('stat-extra', Math.round(state.checkpoint * 100) + '%');
+    } else if (state.source === 'upload') {
+      set('stat-extra', field.model || 'upload');
+    } else {
+      set('stat-extra', field.model || 'MiniLM-L6-v2');
+    }
   }
   function set(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
+
+  function setSourcePanels(src) {
+    var train = document.getElementById('trainingPanel');
+    var real = document.getElementById('realPanel');
+    if (train) train.style.display = src === 'demo' ? 'block' : 'none';
+    if (real) real.style.display = src === 'real' ? 'block' : 'none';
+  }
 
   // ---- UI wiring ----------------------------------------------------------
   function bind(id, evt, fn) {
@@ -200,6 +250,22 @@
     return el;
   }
 
+  bind('source', 'change', function (e) {
+    var v = e.target.value;
+    setSourcePanels(v);
+    if (v === 'demo') rebuildDemo();
+    else if (v === 'real' && OBS.real && OBS.real.loadAtlas) OBS.real.loadAtlas();
+  });
+  bind('cp', 'input', function (e) {
+    state.checkpoint = (+e.target.value) / 100;
+    if (state.source !== 'demo') return;
+    rebuildField(); render();
+  });
+  bind('npts', 'change', function (e) {
+    state.points = +e.target.value;
+    if (state.source !== 'demo') return;
+    rebuildField(); renderer.resetCamera(); render();
+  });
   bind('psize', 'input', function (e) {
     state.pointSize = +e.target.value;
     actor.getProperty().setPointSize(state.pointSize); render();
@@ -235,11 +301,9 @@
   });
   bind('reset', 'click', function () { renderer.resetCamera(); render(); });
 
-  // About modal
   bind('aboutBtn', 'click', function () { document.getElementById('about').style.display = 'flex'; });
   bind('aboutClose', 'click', function () { document.getElementById('about').style.display = 'none'; });
 
-  // Legend (rebuildable: concept atlas, label categories, or discovered clusters)
   function setLegend(names, cols) {
     var box = document.getElementById('legend');
     if (!box) return;
@@ -258,7 +322,7 @@
   }
   setLegend(OBS.palette.conceptNames, OBS.palette.conceptColors);
 
-  // ---- data entry point ---------------------------------------------------
+  // ---- data entry points --------------------------------------------------
   function applyPositions(positions) {
     var pts = vtk.Common.Core.vtkPoints.newInstance();
     pts.setData(positions, 3);
@@ -280,15 +344,19 @@
     }
     return { min: mn, max: mx };
   }
-  // positions: Float32Array(n*3); colors: Uint8Array(n*3); meta: { K, model }
+
   function loadExternal(positions, colors, meta) {
     meta = meta || {};
     var b = boundsOf(positions);
     field = {
       positions: positions, count: positions.length / 3, K: meta.K || 0,
-      colors: colors, min: b.min, max: b.max,
+      colors: colors, min: b.min, max: b.max, concept: null,
       model: meta.model || 'MiniLM-L6-v2'
     };
+    state.source = meta.source || 'real';
+    var srcEl = document.getElementById('source');
+    if (srcEl && meta.source === 'upload') srcEl.value = 'real';
+    setSourcePanels(state.source === 'upload' ? 'real' : state.source);
     applyPositions(positions);
     updateColors();
     polydata.modified();
@@ -298,13 +366,30 @@
     render();
   }
 
+  function rebuildDemo() {
+    state.source = 'demo';
+    var srcEl = document.getElementById('source');
+    if (srcEl) srcEl.value = 'demo';
+    setSourcePanels('demo');
+    rebuildField();
+    setLegend(OBS.palette.conceptNames, OBS.palette.conceptColors);
+    renderer.resetCamera();
+    render();
+  }
+
   // ---- boot ---------------------------------------------------------------
-  updateStats();
+  setSourcePanels('demo');
+  rebuildField();
   renderer.resetCamera();
   render();
 
+  var spinEl = document.getElementById('spin');
+  if (spinEl) spinEl.checked = true;
+  lastT = performance.now();
+  spinLoop();
+
   window.OBS.app = {
     state: state, render: render,
-    loadExternal: loadExternal, setLegend: setLegend
+    loadExternal: loadExternal, rebuildDemo: rebuildDemo, setLegend: setLegend
   };
 })(window.OBS);

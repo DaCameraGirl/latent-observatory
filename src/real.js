@@ -115,8 +115,13 @@
   function init() {
     var a = document.getElementById('embedAtlas'); if (a) a.addEventListener('click', loadAtlas);
     var c = document.getElementById('embedCustom'); if (c) c.addEventListener('click', loadCustom);
-    setStatus('Loading all-MiniLM-L6-v2… first run downloads ~25 MB.');
-    loadAtlas();
+    setStatus('Switch to "Real embeddings" or click Reload concept atlas (~25 MB first run).');
+    // Pre-warm the model in the background without replacing the demo view.
+    getExtractor().then(function () {
+      setStatus('Model ready — click Reload concept atlas or switch data source.');
+    }).catch(function (e) {
+      setStatus('Model unavailable: ' + (e && e.message ? e.message : e));
+    });
   }
 
   OBS.real = { embed: embed, loadAtlas: loadAtlas };

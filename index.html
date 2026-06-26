@@ -19,12 +19,36 @@
     <div class="logo" aria-hidden="true"></div>
     <div>
       <h1>Latent Space Observatory</h1>
-      <p>Real embedding spaces, as a place you can fly through.</p>
+      <p>The internal geometry of an embedding space, as a place you can fly through.</p>
     </div>
   </header>
 
   <!-- Control panel -->
   <aside id="panel">
+    <section>
+      <h2>Data source</h2>
+      <label>
+        <select id="source">
+          <option value="demo" selected>Demo field (instant)</option>
+          <option value="real">Real embeddings (live model)</option>
+        </select>
+      </label>
+    </section>
+
+    <section id="trainingPanel">
+      <h2>Training</h2>
+      <label>Checkpoint <span class="hint">(step 0 &rarr; converged)</span>
+        <input id="cp" type="range" min="0" max="100" value="100" />
+      </label>
+      <label>Embeddings
+        <select id="npts">
+          <option value="8000">8,000 points</option>
+          <option value="20000" selected>20,000 points</option>
+          <option value="40000">40,000 points</option>
+        </select>
+      </label>
+    </section>
+
     <section id="uploadPanel">
       <h2>Your data</h2>
       <p id="uploadStatus" class="hint">Drop a CSV of embeddings or text, or browse below.</p>
@@ -42,9 +66,9 @@
       </details>
     </section>
 
-    <section id="realPanel">
+    <section id="realPanel" style="display:none">
       <h2>Live model</h2>
-      <p id="realStatus" class="hint">Loading all-MiniLM-L6-v2 in your browser&hellip;</p>
+      <p id="realStatus" class="hint">Switch here for real all-MiniLM-L6-v2 embeddings.</p>
       <button id="embedAtlas">Reload concept atlas</button>
       <label>Your words <span class="hint">(one per line)</span>
         <textarea id="realText" rows="5" placeholder="moon&#10;rocket&#10;comet&#10;galaxy&#10;telescope&#10;asteroid"></textarea>
@@ -84,7 +108,7 @@
 
     <section>
       <h2>View</h2>
-      <label class="row"><input id="spin" type="checkbox" /> Auto-orbit</label>
+      <label class="row"><input id="spin" type="checkbox" checked /> Auto-orbit</label>
       <div class="btnrow">
         <button id="reset">Reset camera</button>
         <button id="aboutBtn" class="ghost">About</button>
@@ -97,8 +121,8 @@
     <div id="legend" aria-label="Group legend"></div>
     <div id="stats">
       <span><strong id="stat-n">0</strong> points</span>
-      <span><strong id="stat-k">0</strong> groups</span>
-      <span><strong id="stat-model">loading</strong></span>
+      <span><strong id="stat-k">0</strong> concepts</span>
+      <span>step <strong id="stat-extra">100%</strong></span>
       <span><strong id="stat-fps">0</strong> fps</span>
     </div>
   </footer>
@@ -115,12 +139,14 @@
         </div>
       </div>
       <p>AI research generates enormous high-dimensional data &mdash; embeddings, activations,
-        attention maps &mdash; and almost everyone views it through flat 2D plots. This turns an
-        embedding space into a navigable 3D world: semantic "continents" you can orbit, a probe
-        you can sweep to light up neighborhoods, and your own data dropped straight in.</p>
-      <p>Three real data paths: a curated concept <strong>atlas</strong>, your own
-        <strong>words</strong> embedded live, and your own <strong>file</strong> (CSV/TSV of
-        vectors or text) reduced to 3D in a background worker.</p>
+        training trajectories &mdash; and almost everyone views it through flat 2D plots. This turns
+        an embedding space into a navigable 3D world: semantic "continents" you can orbit, a probe
+        you can sweep to light up neighborhoods, and a checkpoint slider that morphs the field from
+        an undifferentiated blob into sharpened, well-separated representations.</p>
+      <p>Four data paths: an instant <strong>demo field</strong> (20k synthetic points),
+        a curated concept <strong>atlas</strong> with live MiniLM embeddings, your own
+        <strong>words</strong>, and your own <strong>file</strong> (CSV/TSV) reduced in a
+        background worker.</p>
       <p class="muted small">Rendered with <strong>vtk.js</strong> and live
         <strong>all-MiniLM-L6-v2</strong> embeddings via Transformers.js. 100% client-side:
         no server, no API key, no install.</p>
@@ -131,6 +157,7 @@
   <script src="https://unpkg.com/vtk.js@36.2.1/vtk.js"></script>
   <script src="src/palette.js"></script>
   <script src="src/reduce.js"></script>
+  <script src="src/latent.js"></script>
   <script src="src/app.js"></script>
   <script src="src/real.js"></script>
   <script src="src/upload.js"></script>
