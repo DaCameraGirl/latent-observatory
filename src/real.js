@@ -41,6 +41,8 @@
   function setStatus(m) {
     var e = document.getElementById('realStatus');
     if (e) e.textContent = m;
+    var load = document.getElementById('loadingStatus');
+    if (load) load.textContent = m;
   }
 
   // ---- model + embedding --------------------------------------------------

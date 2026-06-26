@@ -9,17 +9,28 @@
   <link rel="stylesheet" href="styles/observatory.css" />
 </head>
 <body>
-  <!-- WebGL canvas mounts here -->
+  <canvas id="starfield" aria-hidden="true"></canvas>
   <div id="view"></div>
+  <div class="premiere-vignette" aria-hidden="true"></div>
+  <div class="premiere-grain" aria-hidden="true"></div>
+
+  <div id="loading" aria-live="polite">
+    <div class="premiere-loading-inner">
+      <div class="premiere-ring" aria-hidden="true"></div>
+      <p class="premiere-eyebrow">Enterprise Observatory</p>
+      <p class="premiere-title">Initializing live embeddings</p>
+      <p id="loadingStatus" class="premiere-status">Downloading all-MiniLM-L6-v2&hellip;</p>
+    </div>
+  </div>
 
   <div id="error" role="alert"></div>
 
-  <!-- Title -->
   <header id="brand">
     <div class="logo" aria-hidden="true"></div>
-    <div>
+    <div class="brand-text">
+      <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> Live · Enterprise</p>
       <h1>Latent Space Observatory</h1>
-      <p>Fly through embedding geometry — orbit, probe, and explore.</p>
+      <p>Real embedding geometry — theatrical orbit, precision probe, cinematic field.</p>
     </div>
   </header>
 
@@ -76,7 +87,7 @@
 
     <section>
       <h2>Field</h2>
-      <label>Point size <input id="psize" type="range" min="1" max="8" value="3" /></label>
+      <label>Point size <input id="psize" type="range" min="1" max="8" value="4" /></label>
       <label>Opacity <input id="opacity" type="range" min="15" max="100" value="100" /></label>
       <label class="row"><input id="iso" type="checkbox" /> Nebula isosurface</label>
       <label>Iso level <input id="isoLevel" type="range" min="5" max="40" value="18" /></label>
@@ -94,8 +105,8 @@
 
   <!-- Legend + stats -->
   <footer id="hud">
-    <div id="legend" aria-label="Group legend"></div>
-    <div id="stats">
+    <div id="legend" class="glass-bar" aria-label="Group legend"></div>
+    <div id="stats" class="glass-bar">
       <span><strong id="stat-n">0</strong> points</span>
       <span><strong id="stat-k">0</strong> concepts</span>
       <span>model <strong id="stat-extra">loading…</strong></span>

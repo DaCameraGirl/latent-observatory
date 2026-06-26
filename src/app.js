@@ -24,7 +24,7 @@
 
   var state = {
     source: 'real',          // 'real' | 'upload'
-    pointSize: 3,
+    pointSize: 4,
     opacity: 1.0,
     colorMode: 'concept',    // 'concept' (supplied colors) | 'query' (distance)
     colormap: 'viridis',
@@ -34,16 +34,56 @@
     spin: true
   };
 
+  // ---- starfield backdrop -------------------------------------------------
+  var starCanvas = document.getElementById('starfield');
+  var starCtx = starCanvas ? starCanvas.getContext('2d') : null;
+  var stars = [];
+  function resizeStarfield() {
+    if (!starCanvas || !starCtx) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    starCanvas.width = window.innerWidth * dpr;
+    starCanvas.height = window.innerHeight * dpr;
+    starCanvas.style.width = window.innerWidth + 'px';
+    starCanvas.style.height = window.innerHeight + 'px';
+    starCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    stars = [];
+    for (var s = 0; s < 2200; s++) {
+      stars.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() * 1.2 + 0.2,
+        a: 0.15 + Math.random() * 0.75,
+        tw: Math.random() * Math.PI * 2
+      });
+    }
+  }
+  function paintStarfield(t) {
+    if (!starCtx || !starCanvas) return;
+    starCtx.fillStyle = '#010208';
+    starCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    for (var i = 0; i < stars.length; i++) {
+      var st = stars[i];
+      var flicker = 0.55 + 0.45 * Math.sin(t * 0.001 + st.tw);
+      starCtx.beginPath();
+      starCtx.arc(st.x, st.y, st.r, 0, Math.PI * 2);
+      starCtx.fillStyle = 'rgba(220, 235, 255, ' + (st.a * flicker) + ')';
+      starCtx.fill();
+    }
+  }
+  resizeStarfield();
+  window.addEventListener('resize', resizeStarfield);
+
   // ---- renderer -----------------------------------------------------------
   var container = document.getElementById('view');
   var fsrw = vtk.Rendering.Misc.vtkFullScreenRenderWindow.newInstance({
     rootContainer: container,
-    containerStyle: { position: 'absolute', width: '100%', height: '100%' },
-    background: [0.02, 0.02, 0.06]
+    containerStyle: { position: 'absolute', width: '100%', height: '100%', background: 'transparent' },
+    background: [0.01, 0.02, 0.05]
   });
   var renderer = fsrw.getRenderer();
   var renderWindow = fsrw.getRenderWindow();
-  renderer.setBackground(0.01, 0.015, 0.045);
+  try { renderer.setBackground(0.01, 0.02, 0.05, 0); } catch (e) { renderer.setBackground(0.01, 0.02, 0.05); }
+  try { renderer.setUseDepthPeeling && renderer.setUseDepthPeeling(true); } catch (e) {}
 
   try {
     var key = vtk.Rendering.Core.vtkLight.newInstance();
@@ -68,6 +108,7 @@
   actor.getProperty().setPointSize(state.pointSize);
   actor.getProperty().setOpacity(state.opacity);
   try { actor.getProperty().setLighting(false); } catch (e) {}
+  try { actor.getProperty().setRenderPointsAsSpheres(true); } catch (e) {}
   renderer.addActor(actor);
 
   // ---- isosurface ("nebula") actor ---------------------------------------
@@ -75,10 +116,14 @@
   isoMapper.setScalarVisibility(false);
   var isoActor = vtk.Rendering.Core.vtkActor.newInstance();
   isoActor.setMapper(isoMapper);
-  isoActor.getProperty().setColor(0.25, 0.9, 0.95);
-  isoActor.getProperty().setOpacity(0.14);
-  isoActor.getProperty().setColor(0.35, 0.75, 1.0);
+  isoActor.getProperty().setColor(0.45, 0.82, 1.0);
+  isoActor.getProperty().setOpacity(0.22);
   var isoInScene = false;
+
+  function hidePremiereLoading() {
+    var el = document.getElementById('loading');
+    if (el && !el.classList.contains('hidden')) el.classList.add('hidden');
+  }
 
   var field = null;
   var lastFrame = performance.now();
@@ -189,8 +234,9 @@
   function animLoop() {
     var now = performance.now();
     lastFrame = now;
+    paintStarfield(now);
     if (state.spin) {
-      renderer.getActiveCamera().azimuth(0.28);
+      renderer.getActiveCamera().azimuth(0.22);
       renderer.resetCameraClippingRange();
       frames++;
       if (now - lastT >= 500) {
@@ -317,6 +363,7 @@
     updateStats();
     renderer.resetCamera();
     render();
+    hidePremiereLoading();
   }
 
   // ---- boot ---------------------------------------------------------------
@@ -332,6 +379,7 @@
 
   window.OBS.app = {
     state: state, render: render,
-    loadExternal: loadExternal, setLegend: setLegend
+    loadExternal: loadExternal, setLegend: setLegend,
+    hidePremiereLoading: hidePremiereLoading
   };
 })(window.OBS);
