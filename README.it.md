@@ -20,6 +20,7 @@
 <p align="center">
   <a href="https://dacameragirl.github.io/latent-observatory/"><img src="https://img.shields.io/badge/🌐_App_live-4fd6e0?style=for-the-badge&labelColor=0f131a" alt="App live"/></a>
   <a href="https://dacameragirl.github.io/links/"><img src="https://img.shields.io/badge/🔗_Hub_progetto-131a26?style=for-the-badge&labelColor=0f131a" alt="Hub progetto"/></a>
+  <a href="https://dacameragirl.github.io/solar-planets/"><img src="https://img.shields.io/badge/🪐_Pianeti_solari-131a26?style=for-the-badge&labelColor=0f131a" alt="Pianeti solari"/></a>
   <img src="https://img.shields.io/badge/vtk.js-36.2-131a26?style=for-the-badge&labelColor=0f131a" alt="vtk.js"/>
   <img src="https://img.shields.io/badge/Transformers.js-2.17-131a26?style=for-the-badge&labelColor=0f131a" alt="Transformers.js"/>
   <img src="https://img.shields.io/badge/all--MiniLM--L6--v2-live-0f131a?style=for-the-badge&labelColor=05060d" alt="all-MiniLM-L6-v2"/>
@@ -49,6 +50,7 @@ La ricerca IA genera enormi dati ad alta dimensionalità — embeddings, attivaz
 | **App live** | [dacameragirl.github.io/latent-observatory](https://dacameragirl.github.io/latent-observatory/) |
 | **Repository GitHub** | [github.com/DaCameraGirl/latent-observatory](https://github.com/DaCameraGirl/latent-observatory) |
 | **Hub progetto** | [dacameragirl.github.io/links](https://dacameragirl.github.io/links/) (strumenti IA) |
+| **Pianeti solari** | [dacameragirl.github.io/solar-planets](https://dacameragirl.github.io/solar-planets/) (spin-off sistema solare) |
 
 <p align="center">
   <img src="docs/assets/i18n/it/readme-divider.svg" alt="" width="100%"/>

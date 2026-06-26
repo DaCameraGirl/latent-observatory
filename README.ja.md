@@ -20,6 +20,7 @@
 <p align="center">
   <a href="https://dacameragirl.github.io/latent-observatory/"><img src="https://img.shields.io/badge/🌐_ライブアプリ-4fd6e0?style=for-the-badge&labelColor=0f131a" alt="ライブアプリ"/></a>
   <a href="https://dacameragirl.github.io/links/"><img src="https://img.shields.io/badge/🔗_プロジェクトハブ-131a26?style=for-the-badge&labelColor=0f131a" alt="プロジェクトハブ"/></a>
+  <a href="https://dacameragirl.github.io/solar-planets/"><img src="https://img.shields.io/badge/🪐_ソーラープラネッツ-131a26?style=for-the-badge&labelColor=0f131a" alt="ソーラープラネッツ"/></a>
   <img src="https://img.shields.io/badge/vtk.js-36.2-131a26?style=for-the-badge&labelColor=0f131a" alt="vtk.js"/>
   <img src="https://img.shields.io/badge/Transformers.js-2.17-131a26?style=for-the-badge&labelColor=0f131a" alt="Transformers.js"/>
   <img src="https://img.shields.io/badge/all--MiniLM--L6--v2-live-0f131a?style=for-the-badge&labelColor=05060d" alt="all-MiniLM-L6-v2"/>
@@ -49,6 +50,7 @@ AI 研究は膨大な高次元データ — 埋め込み、アクティベーシ
 | **ライブアプリ** | [dacameragirl.github.io/latent-observatory](https://dacameragirl.github.io/latent-observatory/) |
 | **GitHub リポジトリ** | [github.com/DaCameraGirl/latent-observatory](https://github.com/DaCameraGirl/latent-observatory) |
 | **プロジェクトハブ** | [dacameragirl.github.io/links](https://dacameragirl.github.io/links/)（AI ツール） |
+| **ソーラープラネッツ** | [dacameragirl.github.io/solar-planets](https://dacameragirl.github.io/solar-planets/)（太陽系スピンオフ） |
 
 <p align="center">
   <img src="docs/assets/i18n/ja/readme-divider.svg" alt="" width="100%"/>

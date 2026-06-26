@@ -20,6 +20,7 @@
 <p align="center">
   <a href="https://dacameragirl.github.io/latent-observatory/"><img src="https://img.shields.io/badge/🌐_라이브_앱-4fd6e0?style=for-the-badge&labelColor=0f131a" alt="라이브 앱"/></a>
   <a href="https://dacameragirl.github.io/links/"><img src="https://img.shields.io/badge/🔗_프로젝트_허브-131a26?style=for-the-badge&labelColor=0f131a" alt="프로젝트 허브"/></a>
+  <a href="https://dacameragirl.github.io/solar-planets/"><img src="https://img.shields.io/badge/🪐_태양계_행성-131a26?style=for-the-badge&labelColor=0f131a" alt="태양계 행성"/></a>
   <img src="https://img.shields.io/badge/vtk.js-36.2-131a26?style=for-the-badge&labelColor=0f131a" alt="vtk.js"/>
   <img src="https://img.shields.io/badge/Transformers.js-2.17-131a26?style=for-the-badge&labelColor=0f131a" alt="Transformers.js"/>
   <img src="https://img.shields.io/badge/all--MiniLM--L6--v2-live-0f131a?style=for-the-badge&labelColor=05060d" alt="all-MiniLM-L6-v2"/>
@@ -49,6 +50,7 @@ AI 연구는 방대한 고차원 데이터 — 임베딩, 활성화, 어텐션 �
 | **라이브 앱** | [dacameragirl.github.io/latent-observatory](https://dacameragirl.github.io/latent-observatory/) |
 | **GitHub 저장소** | [github.com/DaCameraGirl/latent-observatory](https://github.com/DaCameraGirl/latent-observatory) |
 | **프로젝트 허브** | [dacameragirl.github.io/links](https://dacameragirl.github.io/links/) (AI 도구) |
+| **태양계 행성** | [dacameragirl.github.io/solar-planets](https://dacameragirl.github.io/solar-planets/) (태양계 스핀오프) |
 
 <p align="center">
   <img src="docs/assets/i18n/ko/readme-divider.svg" alt="" width="100%"/>
