@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/readme-hero.svg" alt="Latent Space Observatory — durch Embedding-Räume in 3D fliegen" width="100%"/>
+  <img src="docs/assets/i18n/de/readme-hero.svg" alt="Latent Space Observatory — durch Embedding-Räume in 3D fliegen" width="100%"/>
 </p>
 
 # Latent Space Observatory
@@ -27,19 +27,19 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/embedding-orbit.svg" alt="Animierter Latent Space — Konzept-Cluster, Abfrage-Sonde, Auto-Orbit" width="560"/>
+  <img src="docs/assets/i18n/de/embedding-orbit.svg" alt="Animierter Latent Space — Konzept-Cluster, Abfrage-Sonde, Auto-Orbit" width="560"/>
 </p>
 
 **Erkunden Sie echte Embedding-Räume in 3D — laden Sie eigene Vektoren hoch oder betten Sie Text live mit einem Modell ein, das im Browser läuft.**
 
-KI-Forschung erzeugt enorme hochdimensionale Daten — Embeddings, Aktivierungen, Attention-Maps — und fast alle betrachten sie über flache 2D-Plots. Dieses Tool rendert einen Embedding-Raum als navigierbare 3D-Welt, gebaut mit demselben Toolkit wie ParaView. Es startet direkt mit **live** `all-MiniLM-L6-v2`-Embeddings; es gibt keine synthetische Demo.
+KI-Forschung erzeugt enorme hochdimensionale Daten — Embeddings, Aktivierungen, Attention-Maps — und fast alle betrachten sie über flache 2D-Plots. Dieses Tool rendert einen Embedding-Raum als navigierbare 3D-Welt, gebaut mit demselben Toolkit wie ParaView. Es startet sofort mit einem **20.000-Punkte-Demo-Feld** und Auto-Orbit; wechseln Sie zu **live** `all-MiniLM-L6-v2`-Embeddings, eigenen Wörtern oder einer hochgeladenen Datei.
 
 <p align="center">
-  <img src="docs/assets/readme-status.svg" alt="Live-MiniLM-Embeddings in Ihrem Browser" width="100%"/>
+  <img src="docs/assets/i18n/de/readme-status.svg" alt="Live-MiniLM-Embeddings in Ihrem Browser" width="100%"/>
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/de/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Repo vs. Live
@@ -51,7 +51,7 @@ KI-Forschung erzeugt enorme hochdimensionale Daten — Embeddings, Aktivierungen
 | **Projekt-Hub** | [dacameragirl.github.io/links](https://dacameragirl.github.io/links/) (KI-Tools) |
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/de/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Drei echte Datenpfade
@@ -86,7 +86,7 @@ Eine optionale **`label`/`category`-Spalte** färbt Punkte kategorial ein; ander
 | **100% clientseitig** | Statisches HTML/CSS/JS, vtk.js von gepinntem CDN, dynamischer Transformers.js-Import |
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/de/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Warum vtk.js (die ParaView-Verbindung)
@@ -109,7 +109,7 @@ docs/assets/           README-Hero, animierte Orbit-Grafik, dunkle Sektions-Art
 ```
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/de/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Steuerung
@@ -129,7 +129,7 @@ docs/assets/           README-Hero, animierte Orbit-Grafik, dunkle Sektions-Art
 Maus: Ziehen zum Drehen, Scrollen zum Zoomen, Rechtsklick-Ziehen zum Schwenken (vtk.js-Trackball).
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/de/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Lokal entwickeln

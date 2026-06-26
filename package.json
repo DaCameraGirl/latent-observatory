@@ -8,7 +8,8 @@
   "private": true,
   "scripts": {
     "start": "npx serve .",
-    "check": "node --check src/palette.js && node --check src/latent.js && node --check src/app.js"
+    "check": "node --check src/palette.js && node --check src/latent.js && node --check src/app.js",
+    "readme:i18n": "node scripts/generate-readme-i18n-assets.mjs"
   },
   "keywords": ["vtk.js", "paraview", "embeddings", "latent-space", "visualization", "webgl", "ai"]
 }

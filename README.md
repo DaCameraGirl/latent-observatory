@@ -35,7 +35,7 @@
 AI research generates enormous high-dimensional data — embeddings, activations, attention
 maps — and almost everyone looks at it through flat 2D plots. This tool renders an embedding
 space as a navigable 3D world, built on the same toolkit ParaView is made of. It launches
-straight into **live** `all-MiniLM-L6-v2` embeddings; there is no synthetic demo.
+instantly with a **20,000-point demo field** and auto-orbit; switch to **live** `all-MiniLM-L6-v2` embeddings, your own words, or an uploaded file.
 
 <p align="center">
   <img src="docs/assets/readme-status.svg" alt="Live MiniLM embeddings in your browser" width="100%"/>
