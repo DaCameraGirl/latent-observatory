@@ -33,13 +33,14 @@
     checkpoint: 1.0,
     points: 20000,
     K: 12,
-    pointSize: 3,
-    opacity: 1.0,
+    pointSize: 2,
+    opacity: 0.42,
     colorMode: 'concept',  // 'concept' (supplied colors) | 'query' (distance)
     colormap: 'viridis',
     query: [0, 0, 0],
-    iso: false,
+    iso: true,
     isoLevel: 0.18,
+    cosmos: true,
     spin: true
   };
 
@@ -52,6 +53,21 @@
   });
   var renderer = fsrw.getRenderer();
   var renderWindow = fsrw.getRenderWindow();
+  renderer.setBackground(0.01, 0.015, 0.045);
+
+  try {
+    var key = vtk.Rendering.Core.vtkLight.newInstance();
+    key.setPosition(14, 20, 12);
+    key.setFocalPoint(0, 0, 0);
+    key.setIntensity(1.15);
+    renderer.addLight(key);
+    var fill = vtk.Rendering.Core.vtkLight.newInstance();
+    fill.setPosition(-16, -8, -10);
+    fill.setIntensity(0.35);
+    renderer.addLight(fill);
+  } catch (e) {}
+
+  var cosmos = OBS.cosmos ? OBS.cosmos.init(renderer, vtk) : null;
 
   // ---- point-cloud actor --------------------------------------------------
   var polydata = vtk.Common.DataModel.vtkPolyData.newInstance();
@@ -72,10 +88,17 @@
   var isoActor = vtk.Rendering.Core.vtkActor.newInstance();
   isoActor.setMapper(isoMapper);
   isoActor.getProperty().setColor(0.25, 0.9, 0.95);
-  isoActor.getProperty().setOpacity(0.10);
+  isoActor.getProperty().setOpacity(0.14);
+  isoActor.getProperty().setColor(0.35, 0.75, 1.0);
   var isoInScene = false;
 
   var field = null;
+  var lastFrame = performance.now();
+
+  function syncCosmos() {
+    if (!cosmos || !field) return;
+    OBS.cosmos.rebuildFromField(cosmos, field);
+  }
 
   // ---- synthetic demo field -----------------------------------------------
   function rebuildField() {
@@ -97,6 +120,7 @@
     updateColors();
     polydata.modified();
     if (state.iso) rebuildIso();
+    syncCosmos();
     updateStats();
   }
 
@@ -203,20 +227,25 @@
   function render() { renderWindow.render(); }
 
   var fps = 0, frames = 0, lastT = performance.now();
-  function spinLoop() {
-    if (!state.spin) return;
-    renderer.getActiveCamera().azimuth(0.3);
-    renderer.resetCameraClippingRange();
-    render();
-    frames++;
+  function animLoop() {
     var now = performance.now();
-    if (now - lastT >= 500) {
-      fps = Math.round((frames * 1000) / (now - lastT));
-      frames = 0; lastT = now;
-      var el = document.getElementById('stat-fps');
-      if (el) el.textContent = fps;
+    var dt = Math.min(0.05, (now - lastFrame) / 1000);
+    lastFrame = now;
+    if (cosmos && state.cosmos) OBS.cosmos.tick(cosmos, dt);
+
+    if (state.spin) {
+      renderer.getActiveCamera().azimuth(0.28);
+      renderer.resetCameraClippingRange();
+      frames++;
+      if (now - lastT >= 500) {
+        fps = Math.round((frames * 1000) / (now - lastT));
+        frames = 0; lastT = now;
+        var el = document.getElementById('stat-fps');
+        if (el) el.textContent = fps;
+      }
     }
-    requestAnimationFrame(spinLoop);
+    render();
+    requestAnimationFrame(animLoop);
   }
 
   function updateStats() {
@@ -295,9 +324,17 @@
     state.isoLevel = (+e.target.value) / 100;
     if (state.iso) { rebuildIso(); render(); }
   });
+  bind('cosmos', 'change', function (e) {
+    state.cosmos = e.target.checked;
+    if (cosmos) {
+      OBS.cosmos.setEnabled(cosmos, state.cosmos);
+      if (state.cosmos) syncCosmos();
+      render();
+    }
+  });
   bind('spin', 'change', function (e) {
     state.spin = e.target.checked;
-    if (state.spin) { lastT = performance.now(); frames = 0; spinLoop(); }
+    if (state.spin) { lastT = performance.now(); frames = 0; }
   });
   bind('reset', 'click', function () { renderer.resetCamera(); render(); });
 
@@ -361,6 +398,7 @@
     updateColors();
     polydata.modified();
     if (state.iso) rebuildIso();
+    syncCosmos();
     updateStats();
     renderer.resetCamera();
     render();
@@ -380,13 +418,18 @@
   // ---- boot ---------------------------------------------------------------
   setSourcePanels('demo');
   rebuildField();
+  setIso(state.iso);
+  if (cosmos) OBS.cosmos.setEnabled(cosmos, state.cosmos);
   renderer.resetCamera();
   render();
 
   var spinEl = document.getElementById('spin');
   if (spinEl) spinEl.checked = true;
+  var cosmosEl = document.getElementById('cosmos');
+  if (cosmosEl) cosmosEl.checked = state.cosmos;
   lastT = performance.now();
-  spinLoop();
+  lastFrame = performance.now();
+  animLoop();
 
   window.OBS.app = {
     state: state, render: render,
