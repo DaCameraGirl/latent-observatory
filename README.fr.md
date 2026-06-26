@@ -32,7 +32,7 @@
 
 **Explorez de vrais espaces d'embeddings en 3D — importez vos propres vecteurs ou intégrez du texte en direct avec un modèle exécuté dans votre navigateur.**
 
-La recherche en IA génère d'énormes données à haute dimension — embeddings, activations, cartes d'attention — et presque tout le monde les regarde via des graphiques plats en 2D. Cet outil rend un espace d'embeddings comme un monde 3D navigable, construit avec la même boîte à outils que ParaView. Il démarre instantanément avec un **champ démo de 20 000 points** et orbite automatique ; passez aux embeddings **en direct** `all-MiniLM-L6-v2`, vos propres mots ou un fichier importé.
+La recherche en IA génère d'énormes données à haute dimension — embeddings, activations, cartes d'attention — et presque tout le monde les regarde via des graphiques plats en 2D. Cet outil rend un espace d'embeddings comme un monde 3D navigable, construit avec la même boîte à outils que ParaView. Au lancement, il charge un **atlas de concepts en direct** avec `all-MiniLM-L6-v2` (~25 Mo la première fois) ; intégrez vos mots ou importez un fichier.
 
 <p align="center">
   <img src="docs/assets/i18n/fr/readme-status.svg" alt="Embeddings MiniLM en direct dans votre navigateur" width="100%"/>

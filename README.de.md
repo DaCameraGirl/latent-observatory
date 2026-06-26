@@ -32,7 +32,7 @@
 
 **Erkunden Sie echte Embedding-Räume in 3D — laden Sie eigene Vektoren hoch oder betten Sie Text live mit einem Modell ein, das im Browser läuft.**
 
-KI-Forschung erzeugt enorme hochdimensionale Daten — Embeddings, Aktivierungen, Attention-Maps — und fast alle betrachten sie über flache 2D-Plots. Dieses Tool rendert einen Embedding-Raum als navigierbare 3D-Welt, gebaut mit demselben Toolkit wie ParaView. Es startet sofort mit einem **20.000-Punkte-Demo-Feld** und Auto-Orbit; wechseln Sie zu **live** `all-MiniLM-L6-v2`-Embeddings, eigenen Wörtern oder einer hochgeladenen Datei.
+KI-Forschung erzeugt enorme hochdimensionale Daten — Embeddings, Aktivierungen, Attention-Maps — und fast alle betrachten sie über flache 2D-Plots. Dieses Tool rendert einen Embedding-Raum als navigierbare 3D-Welt, gebaut mit demselben Toolkit wie ParaView. Beim Start lädt es einen **live** `all-MiniLM-L6-v2`-Konzeptatlas (~25 MB beim ersten Mal); eigene Wörter einbetten oder Datei hochladen.
 
 <p align="center">
   <img src="docs/assets/i18n/de/readme-status.svg" alt="Live-MiniLM-Embeddings in Ihrem Browser" width="100%"/>

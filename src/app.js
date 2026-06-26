@@ -5,9 +5,8 @@
  * Coloring is either categorical (supplied with the data) or continuous
  * (distance to a movable query probe), fed to vtk.js as direct uchar scalars.
  *
- * Launches instantly with a synthetic demo field (20k points, auto-orbit).
- * Real embeddings and uploaded files arrive via loadExternal().
- * Everything is client-side: no server, no build step, no install.
+ * Launches with live MiniLM concept atlas (real.js). Uploads arrive via
+ * loadExternal(). Everything is client-side: no server, no build step.
  */
 (function (OBS) {
   'use strict';
@@ -22,20 +21,12 @@
     fail('vtk.js failed to load from the CDN. Check your connection and hard-refresh (Ctrl+Shift+R).');
     return;
   }
-  if (!OBS.latent) {
-    fail('Demo field generator failed to load. Hard-refresh (Ctrl+Shift+R).');
-    return;
-  }
 
-  var R = 10;
   var state = {
-    source: 'demo',        // 'demo' | 'real' | 'upload'
-    checkpoint: 1.0,
-    points: 20000,
-    K: 12,
+    source: 'real',          // 'real' | 'upload'
     pointSize: 3,
     opacity: 1.0,
-    colorMode: 'concept',  // 'concept' (supplied colors) | 'query' (distance)
+    colorMode: 'concept',    // 'concept' (supplied colors) | 'query' (distance)
     colormap: 'viridis',
     query: [0, 0, 0],
     iso: false,
@@ -91,29 +82,6 @@
 
   var field = null;
   var lastFrame = performance.now();
-
-  // ---- synthetic demo field -----------------------------------------------
-  function rebuildField() {
-    field = OBS.latent.generate({
-      concepts: state.K, points: state.points, radius: R,
-      seed: 1337, checkpoint: state.checkpoint
-    });
-
-    var pts = vtk.Common.Core.vtkPoints.newInstance();
-    pts.setData(field.positions, 3);
-    polydata.setPoints(pts);
-
-    var n = field.count;
-    var verts = new Uint32Array(n + 1);
-    verts[0] = n;
-    for (var i = 0; i < n; i++) verts[i + 1] = i;
-    polydata.getVerts().setData(verts);
-
-    updateColors();
-    polydata.modified();
-    if (state.iso) rebuildIso();
-    updateStats();
-  }
 
   // ---- coloring -----------------------------------------------------------
   function computeColors() {
@@ -220,7 +188,6 @@
   var fps = 0, frames = 0, lastT = performance.now();
   function animLoop() {
     var now = performance.now();
-    var dt = Math.min(0.05, (now - lastFrame) / 1000);
     lastFrame = now;
     if (state.spin) {
       renderer.getActiveCamera().azimuth(0.28);
@@ -244,22 +211,9 @@
     }
     set('stat-n', field.count.toLocaleString());
     set('stat-k', field.K);
-    if (state.source === 'demo') {
-      set('stat-extra', Math.round(state.checkpoint * 100) + '%');
-    } else if (state.source === 'upload') {
-      set('stat-extra', field.model || 'upload');
-    } else {
-      set('stat-extra', field.model || 'MiniLM-L6-v2');
-    }
+    set('stat-extra', field.model || 'MiniLM-L6-v2');
   }
   function set(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
-
-  function setSourcePanels(src) {
-    var train = document.getElementById('trainingPanel');
-    var real = document.getElementById('realPanel');
-    if (train) train.style.display = src === 'demo' ? 'block' : 'none';
-    if (real) real.style.display = src === 'real' ? 'block' : 'none';
-  }
 
   // ---- UI wiring ----------------------------------------------------------
   function bind(id, evt, fn) {
@@ -268,22 +222,6 @@
     return el;
   }
 
-  bind('source', 'change', function (e) {
-    var v = e.target.value;
-    setSourcePanels(v);
-    if (v === 'demo') rebuildDemo();
-    else if (v === 'real' && OBS.real && OBS.real.loadAtlas) OBS.real.loadAtlas();
-  });
-  bind('cp', 'input', function (e) {
-    state.checkpoint = (+e.target.value) / 100;
-    if (state.source !== 'demo') return;
-    rebuildField(); render();
-  });
-  bind('npts', 'change', function (e) {
-    state.points = +e.target.value;
-    if (state.source !== 'demo') return;
-    rebuildField(); renderer.resetCamera(); render();
-  });
   bind('psize', 'input', function (e) {
     state.pointSize = +e.target.value;
     actor.getProperty().setPointSize(state.pointSize); render();
@@ -372,9 +310,6 @@
       model: meta.model || 'MiniLM-L6-v2'
     };
     state.source = meta.source || 'real';
-    var srcEl = document.getElementById('source');
-    if (srcEl && meta.source === 'upload') srcEl.value = 'real';
-    setSourcePanels(state.source === 'upload' ? 'real' : state.source);
     applyPositions(positions);
     updateColors();
     polydata.modified();
@@ -384,22 +319,9 @@
     render();
   }
 
-  function rebuildDemo() {
-    state.source = 'demo';
-    var srcEl = document.getElementById('source');
-    if (srcEl) srcEl.value = 'demo';
-    setSourcePanels('demo');
-    rebuildField();
-    setLegend(OBS.palette.conceptNames, OBS.palette.conceptColors);
-    renderer.resetCamera();
-    render();
-  }
-
   // ---- boot ---------------------------------------------------------------
-  setSourcePanels('demo');
-  rebuildField();
   setIso(state.iso);
-  renderer.resetCamera();
+  updateStats();
   render();
 
   var spinEl = document.getElementById('spin');
@@ -410,6 +332,6 @@
 
   window.OBS.app = {
     state: state, render: render,
-    loadExternal: loadExternal, rebuildDemo: rebuildDemo, setLegend: setLegend
+    loadExternal: loadExternal, setLegend: setLegend
   };
 })(window.OBS);

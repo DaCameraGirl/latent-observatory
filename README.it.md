@@ -32,7 +32,7 @@
 
 **Esplora spazi di embeddings reali in 3D — carica i tuoi vettori o incorpora testo in tempo reale con un modello che gira nel browser.**
 
-La ricerca IA genera enormi dati ad alta dimensionalità — embeddings, attivazioni, mappe di attenzione — e quasi tutti li guardano attraverso grafici piatti 2D. Questo strumento rende uno spazio di embeddings come un mondo 3D navigabile, costruito con lo stesso toolkit di ParaView. Si avvia istantaneamente con un **campo demo da 20.000 punti** e orbita automatica; passa a embeddings **live** `all-MiniLM-L6-v2`, parole personalizzate o un file caricato.
+La ricerca IA genera enormi dati ad alta dimensionalità — embeddings, attivazioni, mappe di attenzione — e quasi tutti li guardano attraverso grafici piatti 2D. Questo strumento rende uno spazio di embeddings come un mondo 3D navigabile, costruito con lo stesso toolkit di ParaView. All'avvio carica un **atlante di concetti live** con `all-MiniLM-L6-v2` (~25 MB al primo avvio); incorpora parole personalizzate o carica un file.
 
 <p align="center">
   <img src="docs/assets/i18n/it/readme-status.svg" alt="Embeddings MiniLM live nel tuo browser" width="100%"/>
