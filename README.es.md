@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/readme-hero.svg" alt="Latent Space Observatory — recorre el espacio de embeddings en 3D" width="100%"/>
+  <img src="docs/assets/i18n/es/readme-hero.svg" alt="Latent Space Observatory — recorre el espacio de embeddings en 3D" width="100%"/>
 </p>
 
 # Observatorio del Espacio Latente
@@ -27,19 +27,19 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/embedding-orbit.svg" alt="Espacio latente animado — clústeres de conceptos, sonda de consulta, órbita automática" width="560"/>
+  <img src="docs/assets/i18n/es/embedding-orbit.svg" alt="Espacio latente animado — clústeres de conceptos, sonda de consulta, órbita automática" width="560"/>
 </p>
 
 **Explora espacios de embeddings reales en 3D — sube tus propios vectores o incrusta texto en vivo con un modelo que se ejecuta en tu navegador.**
 
-La investigación en IA genera enormes volúmenes de datos de alta dimensión — embeddings, activaciones, mapas de atención — y casi todo el mundo los mira a través de gráficos planos en 2D. Esta herramienta renderiza un espacio de embeddings como un mundo 3D navegable, construido con el mismo conjunto de herramientas que impulsa ParaView. Arranca directamente con embeddings **en vivo** de `all-MiniLM-L6-v2`; no hay demo sintética.
+La investigación en IA genera enormes volúmenes de datos de alta dimensión — embeddings, activaciones, mapas de atención — y casi todo el mundo los mira a través de gráficos planos en 2D. Esta herramienta renderiza un espacio de embeddings como un mundo 3D navegable, construido con el mismo conjunto de herramientas que impulsa ParaView. Arranca al instante con un **campo demo de 20.000 puntos** y órbita automática; cambia a embeddings **en vivo** de `all-MiniLM-L6-v2`, tus propias palabras o un archivo subido.
 
 <p align="center">
-  <img src="docs/assets/readme-status.svg" alt="Embeddings MiniLM en vivo en tu navegador" width="100%"/>
+  <img src="docs/assets/i18n/es/readme-status.svg" alt="Embeddings MiniLM en vivo en tu navegador" width="100%"/>
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/es/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Repositorio vs. app en vivo
@@ -51,7 +51,7 @@ La investigación en IA genera enormes volúmenes de datos de alta dimensión �
 | **Hub del proyecto** | [dacameragirl.github.io/links](https://dacameragirl.github.io/links/) (herramientas de IA) |
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/es/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Tres rutas de datos reales
@@ -86,7 +86,7 @@ Una columna opcional **`label`/`category`** colorea los puntos por categoría; d
 | **100% en el cliente** | HTML/CSS/JS estático, vtk.js desde un CDN fijado, importación dinámica de Transformers.js |
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/es/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Por qué vtk.js (la conexión con ParaView)
@@ -109,7 +109,7 @@ docs/assets/           héroe del README, órbita animada, arte de secciones osc
 ```
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/es/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Controles
@@ -129,7 +129,7 @@ docs/assets/           héroe del README, órbita animada, arte de secciones osc
 Ratón: arrastrar para rotar, rueda para zoom, clic derecho + arrastrar para desplazar (trackball de vtk.js).
 
 <p align="center">
-  <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
+  <img src="docs/assets/i18n/es/readme-divider.svg" alt="" width="100%"/>
 </p>
 
 ## Desarrollo local
