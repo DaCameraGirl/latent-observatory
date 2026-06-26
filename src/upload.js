@@ -73,7 +73,7 @@
 
   function finishRender(positions, colors, K) {
     var n = positions.length / 3;
-    OBS.app.loadExternal(positions, colors, { K: K, model: currentFile });
+    OBS.app.loadExternal(positions, colors, { K: K, model: currentFile, source: 'upload' });
     status('Loaded ' + n.toLocaleString() + ' points from ' + currentFile);
     info(currentFile + ' · ' + n.toLocaleString() + ' points · ' + (detail || 'data'));
   }
