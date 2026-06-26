@@ -19,7 +19,7 @@
     <div class="logo" aria-hidden="true"></div>
     <div>
       <h1>Latent Space Observatory</h1>
-      <p>Semantic worlds as a living solar system — orbit, probe, and explore.</p>
+      <p>Fly through embedding geometry — orbit, probe, and explore.</p>
     </div>
   </header>
 
@@ -100,15 +100,14 @@
 
     <section>
       <h2>Field</h2>
-      <label>Point size <input id="psize" type="range" min="1" max="8" value="2" /></label>
-      <label>Opacity <input id="opacity" type="range" min="15" max="100" value="42" /></label>
-      <label class="row"><input id="iso" type="checkbox" checked /> Nebula isosurface</label>
+      <label>Point size <input id="psize" type="range" min="1" max="8" value="3" /></label>
+      <label>Opacity <input id="opacity" type="range" min="15" max="100" value="100" /></label>
+      <label class="row"><input id="iso" type="checkbox" /> Nebula isosurface</label>
       <label>Iso level <input id="isoLevel" type="range" min="5" max="40" value="18" /></label>
     </section>
 
     <section>
       <h2>View</h2>
-      <label class="row"><input id="cosmos" type="checkbox" checked /> Solar system</label>
       <label class="row"><input id="spin" type="checkbox" checked /> Auto-orbit</label>
       <div class="btnrow">
         <button id="reset">Reset camera</button>
@@ -151,6 +150,9 @@
       <p class="muted small">Rendered with <strong>vtk.js</strong> and live
         <strong>all-MiniLM-L6-v2</strong> embeddings via Transformers.js. 100% client-side:
         no server, no API key, no install.</p>
+      <p class="muted small">Want a cinematic solar system instead?
+        <a href="https://dacameragirl.github.io/solar-planets/" target="_blank" rel="noopener">Solar Planets</a>
+        is the dedicated 3D tour of our Sun and worlds.</p>
     </div>
   </div>
 
@@ -159,7 +161,6 @@
   <script src="src/palette.js"></script>
   <script src="src/reduce.js"></script>
   <script src="src/latent.js"></script>
-  <script src="src/cosmos.js"></script>
   <script src="src/app.js"></script>
   <script src="src/real.js"></script>
   <script src="src/upload.js"></script>
