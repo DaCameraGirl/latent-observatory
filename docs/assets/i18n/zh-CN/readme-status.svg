@@ -11,7 +11,7 @@
     <animate attributeName="opacity" values="0.15;0.4;0.15" dur="2.5s" repeatCount="indefinite"/>
   </circle>
   <circle cx="36" cy="36" r="4" fill="#4fd6e0"/>
-  <text x="58" y="32" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#e8edf5">状态：启动即演示场 · 20,000 点 · 自动轨道</text>
+  <text x="58" y="32" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#e8edf5">状态：启动即加载 MiniLM 图谱 · 自动轨道</text>
   <text x="58" y="52" font-family="Segoe UI, Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#8a99b0">无需 API 密钥 · 无服务器 · 真实 MiniLM · 上传 CSV/TSV · 粘贴词语</text>
   <text x="820" y="38" text-anchor="end" font-family="ui-monospace, monospace" font-size="11" fill="#4fd6e0" opacity="0.85">
     <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>384-d → PCA₃
