@@ -77,7 +77,7 @@ loads a **live** `all-MiniLM-L6-v2` concept atlas (~25 MB first run); embed your
 </p>
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Repo%20vs%20live&fontSize=22&fontColor=e6edf3" width="720" alt="Repo vs live" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Repo%20vs%20live&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Repo vs live" /></p>
 
 
 | What | URL |
@@ -92,7 +92,7 @@ loads a **live** `all-MiniLM-L6-v2` concept atlas (~25 MB first run); embed your
 </p>
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Three%20real%20data%20paths&fontSize=22&fontColor=e6edf3" width="720" alt="Three real data paths" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Three%20real%20data%20paths&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Three real data paths" /></p>
 
 
 | Path | You do | The app does |
@@ -118,7 +118,7 @@ colored by clusters discovered in the projection. A sample file lives in
 detected.
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Highlights&fontSize=22&fontColor=e6edf3" width="720" alt="Highlights" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Highlights&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Highlights" /></p>
 
 
 | Feature | What it does |
@@ -135,7 +135,7 @@ detected.
 </p>
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Why%20vtk.js%20(the%20ParaView%20connection)&fontSize=22&fontColor=e6edf3" width="720" alt="Why vtk.js (the ParaView connection)" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Why%20vtk.js%20(the%20ParaView%20connection)&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Why vtk.js (the ParaView connection)" /></p>
 
 
 ParaView is built on **VTK** (the Visualization Toolkit, by Kitware). **vtk.js** is Kitware's
@@ -144,7 +144,7 @@ this keeps real ParaView DNA (scientific fields, isosurfaces, scalar coloring) w
 the desktop install entirely.
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Architecture&fontSize=22&fontColor=e6edf3" width="720" alt="Architecture" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Architecture&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Architecture" /></p>
 
 
 ```text
@@ -165,7 +165,7 @@ docs/assets/           README hero, animated orbit, dark section art
 </p>
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Controls&fontSize=22&fontColor=e6edf3" width="720" alt="Controls" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Controls&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Controls" /></p>
 
 
 | Control | What it does |
@@ -187,7 +187,7 @@ Mouse: drag to rotate, scroll to zoom, right-drag to pan (vtk.js trackball).
 </p>
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Develop%20locally&fontSize=22&fontColor=e6edf3" width="720" alt="Develop locally" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Develop%20locally&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Develop locally" /></p>
 
 
 No build required — see [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -198,7 +198,7 @@ npm run check      # node --check every src/*.js (no browser needed)
 ```
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Roadmap&fontSize=22&fontColor=e6edf3" width="720" alt="Roadmap" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Roadmap&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Roadmap" /></p>
 
 
 - UMAP option alongside PCA for non-linear structure.
@@ -207,14 +207,14 @@ npm run check      # node --check every src/*.js (no browser needed)
 - Per-checkpoint embedding sequences as a real training-playback timeline.
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Contributors&fontSize=22&fontColor=e6edf3" width="720" alt="Contributors" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=Contributors&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="Contributors" /></p>
 
 
 - **Angela Hudson** ([DaCameraGirl](https://github.com/DaCameraGirl)) — product direction, testing, hub placement
 - **Claude** — core app, vtk.js scene, real-embeddings mode, upload pipeline, GitHub workflow
 
 <p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
-<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=License&fontSize=22&fontColor=e6edf3" width="720" alt="License" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=waving&color=0:070b14,100:12102a&height=50&section=header&text=License&fontSize=22&fontColor=e6edf3&animation=twinkling" width="720" alt="License" /></p>
 
 
 © 2026 Angela Hudson (DaCameraGirl). All rights reserved. See [LICENSE](LICENSE).
