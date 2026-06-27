@@ -1,9 +1,39 @@
 <p align="center">
-  <img src="docs/assets/readme-hero.svg" alt="Latent Space Observatory — fly through embedding space in 3D" width="100%"/>
+  <img src="docs/readme-banner.svg" alt="Latent Observatory — Walk through the internal geometry of a neural network's embedding space — a ParaView/vtk.js observatory for AI research." width="720" />
 </p>
 
-# Latent Space Observatory
+<p align="center">
+  <strong>Walk through the internal geometry of a neural network's embedding space — a ParaView/vtk.js observatory for AI research.</strong>
+</p>
 
+<p align="center">
+  <a href="https://dacameragirl.github.io/latent-observatory/"><img src="https://img.shields.io/badge/Live-GitHub%20Pages-33d69f?style=for-the-badge&logo=github&logoColor=white" alt="Live demo" /></a>
+  <a href="https://github.com/DaCameraGirl/latent-observatory"><img src="https://img.shields.io/badge/Code-GitHub-58a6ff?style=for-the-badge&logo=github&logoColor=white" alt="Source code" /></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/deploy-GitHub Pages-000000?style=flat-square&logo=github&logoColor=white" alt="deploy-GitHub Pages" />
+  <img src="https://img.shields.io/badge/research-AI viz-58a6ff?style=flat-square" alt="research-AI viz" />
+</p>
+
+### Languages
+
+<p align="center">
+  <img src="https://img.shields.io/badge/JavaScript-71%25-F7DF1E?style=flat-square&logo=javascript&logoColor=111" alt="JavaScript" />
+  <img src="https://img.shields.io/badge/CSS-20%25-1572B6?style=flat-square&logo=css3&logoColor=white" alt="CSS" />
+  <img src="https://img.shields.io/badge/HTML-10%25-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML" />
+</p>
+
+### Stack
+
+<p align="center">
+  <img src="https://img.shields.io/badge/vtk.js-3D-58a6ff?style=flat-square" alt="vtk.js-3D" />
+  <img src="https://img.shields.io/badge/GitHub Pages-live-33d69f?style=flat-square&logo=github&logoColor=white" alt="GitHub Pages-live" />
+</p>
+
+<p align="center">
+  Built by <strong>Angela Hudson</strong> · <a href="https://github.com/DaCameraGirl">DaCameraGirl</a>
+</p>
 <p align="center">
   <a href="README.md"><img src="https://img.shields.io/badge/🇺🇸_English-4fd6e0?style=for-the-badge&labelColor=0f131a" alt="English"/></a>
   <a href="README.es.md"><img src="https://img.shields.io/badge/🇪🇸_Español-131a26?style=for-the-badge&labelColor=0f131a" alt="Español"/></a>
@@ -46,7 +76,9 @@ loads a **live** `all-MiniLM-L6-v2` concept atlas (~25 MB first run); embed your
   <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
 </p>
 
-## Repo vs live
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Repo%20vs%20live&fontSize=22&fontColor=e6edf3" width="720" alt="Repo vs live" /></p>
+
 
 | What | URL |
 |---|---|
@@ -59,7 +91,9 @@ loads a **live** `all-MiniLM-L6-v2` concept atlas (~25 MB first run); embed your
   <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
 </p>
 
-## Three real data paths
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Three%20real%20data%20paths&fontSize=22&fontColor=e6edf3" width="720" alt="Three real data paths" /></p>
+
 
 | Path | You do | The app does |
 |---|---|---|
@@ -83,7 +117,9 @@ colored by clusters discovered in the projection. A sample file lives in
 (1,000 for live text embedding); the HUD shows the file name, point count, and what was
 detected.
 
-## Highlights
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Highlights&fontSize=22&fontColor=e6edf3" width="720" alt="Highlights" /></p>
+
 
 | Feature | What it does |
 |---|---|
@@ -98,14 +134,18 @@ detected.
   <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
 </p>
 
-## Why vtk.js (the ParaView connection)
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Why%20vtk.js%20(the%20ParaView%20connection)&fontSize=22&fontColor=e6edf3" width="720" alt="Why vtk.js (the ParaView connection)" /></p>
+
 
 ParaView is built on **VTK** (the Visualization Toolkit, by Kitware). **vtk.js** is Kitware's
 WebGL port of that same toolkit — it's what ParaView Glance uses to render in the browser. So
 this keeps real ParaView DNA (scientific fields, isosurfaces, scalar coloring) while shedding
 the desktop install entirely.
 
-## Architecture
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Architecture&fontSize=22&fontColor=e6edf3" width="720" alt="Architecture" /></p>
+
 
 ```text
 index.html             UI shell + control panel; loads vtk.js (pinned) then the app modules
@@ -124,7 +164,9 @@ docs/assets/           README hero, animated orbit, dark section art
   <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
 </p>
 
-## Controls
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Controls&fontSize=22&fontColor=e6edf3" width="720" alt="Controls" /></p>
+
 
 | Control | What it does |
 |---|---|
@@ -144,7 +186,9 @@ Mouse: drag to rotate, scroll to zoom, right-drag to pan (vtk.js trackball).
   <img src="docs/assets/readme-divider.svg" alt="" width="100%"/>
 </p>
 
-## Develop locally
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Develop%20locally&fontSize=22&fontColor=e6edf3" width="720" alt="Develop locally" /></p>
+
 
 No build required — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -153,18 +197,24 @@ npm start          # serve at http://localhost:3000
 npm run check      # node --check every src/*.js (no browser needed)
 ```
 
-## Roadmap
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Roadmap&fontSize=22&fontColor=e6edf3" width="720" alt="Roadmap" /></p>
+
 
 - UMAP option alongside PCA for non-linear structure.
 - Parquet ingestion and a column-mapping UI for arbitrary schemas.
 - glTF export of a captured scene; shareable URL with embedded camera/probe state.
 - Per-checkpoint embedding sequences as a real training-playback timeline.
 
-## Contributors
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=Contributors&fontSize=22&fontColor=e6edf3" width="720" alt="Contributors" /></p>
+
 
 - **Angela Hudson** ([DaCameraGirl](https://github.com/DaCameraGirl)) — product direction, testing, hub placement
 - **Claude** — core app, vtk.js scene, real-embeddings mode, upload pipeline, GitHub workflow
 
-## License
+<p align="center"><img src="docs/readme-divider.svg" width="720" alt="" /></p>
+<p align="center"><img src="https://capsule-render.vercel.app/api?type=rect&color=070b14&height=50&section=header&text=License&fontSize=22&fontColor=e6edf3" width="720" alt="License" /></p>
+
 
 © 2026 Angela Hudson (DaCameraGirl). All rights reserved. See [LICENSE](LICENSE).
